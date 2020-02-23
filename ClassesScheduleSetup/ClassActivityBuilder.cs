@@ -8,7 +8,7 @@ namespace ClassesScheduleSetup
     {
         public ClassActivityBuilder()
         {
-            Weight = 0;
+            Weight = ClassWeights.Normal;
             ClassTimes = new List<ClassTimeBuilder>();
         }
         public ClassActivityBuilder(int activityId) : this()
@@ -17,7 +17,7 @@ namespace ClassesScheduleSetup
         }
 
         public int ActivityId { get; set; }
-        public int Weight { get; set; }
+        public ClassWeights Weight { get; set; }
         public ClassTimeBuilder Time { get; set; }
         public ICollection<ClassTimeBuilder> ClassTimes { get; }
 
@@ -30,7 +30,7 @@ namespace ClassesScheduleSetup
 
             return new ClassAcitivity(
                 ActivityId,
-                Weight,
+                (int)Weight,
                 GetClassTimes()
             );
         }
