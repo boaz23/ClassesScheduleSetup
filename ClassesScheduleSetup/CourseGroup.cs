@@ -6,12 +6,8 @@ namespace ClassesScheduleSetup
 {
     internal class CourseGroup
     {
-        public CourseGroup(int groupId, IClassActivity lecture, IEnumerable<IClassActivity> practicalClasses, IEnumerable<IClassActivity> labs)
+        public CourseGroup(IClassActivity lecture, IEnumerable<IClassActivity> practicalClasses, IEnumerable<IClassActivity> labs)
         {
-            if (groupId <= 0)
-            {
-                throw new ArgumentException("The group id must be positive.", nameof(groupId));
-            }
             if (lecture is null)
             {
                 throw new ArgumentNullException(nameof(lecture));
@@ -25,16 +21,20 @@ namespace ClassesScheduleSetup
                 throw new ArgumentNullException(nameof(labs));
             }
 
-            Id = groupId;
             Lecture = lecture;
             PracticalClasses = practicalClasses;
             Labs = labs;
         }
 
-        public int Id { get; }
+        public int Id => Lecture.ActivityId;
         public IClassActivity Lecture { get; }
         public IEnumerable<IClassActivity> PracticalClasses { get; }
         public IEnumerable<IClassActivity> Labs { get; }
+
+        public override string ToString()
+        {
+            return Id.ToString();
+        }
 
         internal class Builder
         {
@@ -44,7 +44,6 @@ namespace ClassesScheduleSetup
                 Labs = new List<ClassActivityBuilder>();
             }
 
-            public int Id { get; set; }
             public ClassActivityBuilder Lecture { get; set; }
             public ICollection<ClassActivityBuilder> PracticalClasses { get; }
             public ICollection<ClassActivityBuilder> Labs { get; }
@@ -59,7 +58,7 @@ namespace ClassesScheduleSetup
                 IClassActivity lecture = Lecture.CreateClassActivity();
                 IEnumerable<ClassAcitivity> practicalClasses = BuildClassActivities(PracticalClasses);
                 IEnumerable<ClassAcitivity> labs = BuildClassActivities(Labs);
-                var group = new CourseGroup(Id, lecture, practicalClasses, labs);
+                var group = new CourseGroup(lecture, practicalClasses, labs);
 
                 SetGroup(group, practicalClasses);
                 SetGroup(group, labs);

@@ -6,7 +6,7 @@ namespace ClassesScheduleSetup
 {
     internal class ClassAcitivity : IClassActivity
     {
-        internal ClassAcitivity(int activityId, ClassTime time)
+        internal ClassAcitivity(int activityId, IEnumerable<ClassTime> times)
         {
             if (activityId <= 0)
             {
@@ -14,11 +14,16 @@ namespace ClassesScheduleSetup
             }
 
             ActivityId = activityId;
-            Time = time;
+            Times = times;
         }
 
         public int ActivityId { get; }
         public CourseGroup Group { get; internal set; }
-        public ClassTime Time { get; }
+        public IEnumerable<ClassTime> Times { get; }
+
+        public override string ToString()
+        {
+            return $"{ActivityId}: {string.Join(", ", Times)}";
+        }
     }
 }

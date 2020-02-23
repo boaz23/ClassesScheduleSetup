@@ -34,6 +34,11 @@ namespace ClassesScheduleSetup
         public string Name { get; }
         public IEnumerable<CourseGroup> Groups { get; }
 
+        public override string ToString()
+        {
+            return $"{Id} - {Name}";
+        }
+
         public class Builder
         {
             public Builder()
@@ -43,7 +48,7 @@ namespace ClassesScheduleSetup
 
             public string Id { get; set; }
             public string Name { get; set; }
-            ICollection<CourseGroup.Builder> Groups { get; }
+            public ICollection<CourseGroup.Builder> Groups { get; }
 
             public Course Build()
             {

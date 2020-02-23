@@ -8,6 +8,6 @@ namespace ClassesScheduleSetup
     {
         int ActivityId { get; }
         CourseGroup Group { get; }
-        ClassTime Time { get; }
+        IEnumerable<ClassTime> Times { get; }
     }
 }

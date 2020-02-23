@@ -108,7 +108,7 @@ namespace ClassesScheduleSetup
 
         public override string ToString()
         {
-            return $"{time / 10}:{(time % 10) * 6}";
+            return $"{time / 10:D2}:{(time % 10) * 6:D2}";
         }
 
         public int CompareTo(ClassHourTime other)
