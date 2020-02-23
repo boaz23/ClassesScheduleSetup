@@ -6,7 +6,6 @@ namespace ClassesScheduleSetup
     {
         static void Main(string[] args)
         {
-
         }
     }
 }
