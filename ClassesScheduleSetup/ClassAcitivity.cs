@@ -6,7 +6,7 @@ namespace ClassesScheduleSetup
 {
     internal class ClassAcitivity : IClassActivity
     {
-        internal ClassAcitivity(int activityId, IEnumerable<ClassTime> times)
+        internal ClassAcitivity(int activityId, int weight, IEnumerable<ClassTime> times)
         {
             if (activityId <= 0)
             {
@@ -14,10 +14,12 @@ namespace ClassesScheduleSetup
             }
 
             ActivityId = activityId;
+            Weight = weight;
             Times = times;
         }
 
         public int ActivityId { get; }
+        public int Weight { get; }
         public CourseGroup Group { get; internal set; }
         public IEnumerable<ClassTime> Times { get; }
 

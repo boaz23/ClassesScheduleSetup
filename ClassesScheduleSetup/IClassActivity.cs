@@ -7,6 +7,7 @@ namespace ClassesScheduleSetup
     internal interface IClassActivity
     {
         int ActivityId { get; }
+        int Weight { get; }
         CourseGroup Group { get; }
         IEnumerable<ClassTime> Times { get; }
     }
