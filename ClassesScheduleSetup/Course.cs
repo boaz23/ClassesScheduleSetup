@@ -34,6 +34,21 @@ namespace ClassesScheduleSetup
         public string Name { get; }
         public IEnumerable<CourseGroup> Groups { get; }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is Course course)
+            {
+                return Id == course.Id;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+
         public override string ToString()
         {
             return $"{Id} - {Name}";

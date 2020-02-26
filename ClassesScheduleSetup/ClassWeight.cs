@@ -20,7 +20,7 @@ namespace ClassesScheduleSetup
         Thursday_EndsIn5PM = 4000,
         Thursday_EndsIn6PM = 20000,
 
-        Sebastian_Ben_Daniel = -8,
-        Shahaf_Finder = -2,
+        Sebastian_Ben_Daniel = -30000,
+        Shahaf_Finder = -25000,
     }
 }
