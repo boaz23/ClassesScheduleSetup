@@ -28,7 +28,7 @@ namespace ClassesScheduleSetup
         {
             if (hours >= 24)
             {
-                throw new ArgumentOutOfRangeException(nameof(hours), $"{nameof(hours)} must be a number between [0, 23].");
+                throw new ArgumentOutOfRangeException(nameof(hours), $"{nameof(hours)} must be a number in [0, 23].");
             }
 
             return new ClassHourTime((byte)(10 * hours + 5 * Convert.ToInt32(isHalf)));
@@ -38,7 +38,7 @@ namespace ClassesScheduleSetup
         {
             if (time < 0 || time >= 240)
             {
-                throw new ArgumentOutOfRangeException("The time must be a number between 0 to 239.");
+                throw new ArgumentOutOfRangeException("The time must be a number in [0, 239].");
             }
 
             return new ClassHourTime((byte)time);
