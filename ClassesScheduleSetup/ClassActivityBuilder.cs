@@ -18,12 +18,12 @@ namespace ClassesScheduleSetup
 
         public int ActivityId { get; set; }
         public ClassWeights Weight { get; set; }
-        public ClassTimeBuilder Time { get; set; }
+        public ClassTimeBuilder ClassTime { get; set; }
         public ICollection<ClassTimeBuilder> ClassTimes { get; }
 
         internal ClassAcitivity CreateClassActivity()
         {
-            if (Time == null && ClassTimes.Count == 0)
+            if (ClassTime == null && ClassTimes.Count == 0)
             {
                 throw new InvalidOperationException("No time has been set.");
             }
@@ -38,25 +38,25 @@ namespace ClassesScheduleSetup
         private IEnumerable<ClassTime> GetClassTimes()
         {
             IEnumerable<ClassTime> times;
-            if (Time == null)
+            if (ClassTime == null)
             {
-                times = BuildClassActivities(ClassTimes);
+                times = BuildClassTimes(ClassTimes);
             }
             else
             {
                 times = new ClassTime[]
                 {
-                    Time.CreateClassActivity()
+                    ClassTime.CreateClassTime()
                 };
             }
 
             return times;
         }
 
-        private static IEnumerable<ClassTime> BuildClassActivities(IEnumerable<ClassTimeBuilder> classTimes)
+        private static IEnumerable<ClassTime> BuildClassTimes(IEnumerable<ClassTimeBuilder> classTimes)
         {
             return classTimes
-                .Select(t => t.CreateClassActivity())
+                .Select(t => t.CreateClassTime())
                 .ToList();
         }
     }
@@ -75,7 +75,7 @@ namespace ClassesScheduleSetup
         public string Start { get; set; }
         public string End { get; set; }
 
-        internal ClassTime CreateClassActivity()
+        internal ClassTime CreateClassTime()
         {
             return new ClassTime(
                 Day,

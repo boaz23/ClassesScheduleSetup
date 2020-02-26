@@ -51,7 +51,7 @@ namespace ClassesScheduleSetup
         public override string ToString()
         {
             string dayName = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedDayNames[(int)day];
-            return $"{dayName}' {start}-{end}";
+            return $"{dayName} {start}-{end}";
         }
 
         public bool Equals(ClassTime other)
