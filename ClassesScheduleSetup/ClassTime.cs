@@ -16,6 +16,10 @@ namespace ClassesScheduleSetup
             this.day = day;
         }
 
+        public DayOfWeek Day => day;
+        public ClassHourTime Start => start;
+        public ClassHourTime End => end;
+
         public static bool operator ==(ClassTime x, ClassTime y)
         {
             return Equals(x, y);

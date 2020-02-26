@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using static System.Linq.Enumerable;
+using System.ComponentModel;
+using System.Linq;
 
 namespace ClassesScheduleSetup
 {
@@ -10,6 +11,7 @@ namespace ClassesScheduleSetup
         {
             Weight = ClassWeights.Normal;
             ClassTimes = new List<ClassTimeBuilder>();
+            ClassTimes_Concreate = new List<ClassTime>();
         }
         public ClassActivityBuilder(int activityId) : this()
         {
@@ -20,6 +22,16 @@ namespace ClassesScheduleSetup
         public ClassWeights Weight { get; set; }
         public ClassTimeBuilder ClassTime { get; set; }
         public ICollection<ClassTimeBuilder> ClassTimes { get; }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public ICollection<ClassTime> ClassTimes_Concreate { get; }
+
+        public void ClearAllTimes()
+        {
+            ClassTime = null;
+            ClassTimes.Clear();
+            ClassTimes_Concreate.Clear();
+        }
 
         internal ClassAcitivity CreateClassActivity()
         {
@@ -35,19 +47,21 @@ namespace ClassesScheduleSetup
             );
         }
 
-        private IEnumerable<ClassTime> GetClassTimes()
+        internal IEnumerable<ClassTime> GetClassTimes()
         {
             IEnumerable<ClassTime> times;
-            if (ClassTime == null)
+            if (ClassTimes_Concreate != null)
             {
-                times = BuildClassTimes(ClassTimes);
+                times = ClassTimes_Concreate.ToList();
+            }
+            else if (ClassTime != null)
+            {
+                times = EnumerableExtensions.AsEnumerable(ClassTime.CreateClassTime())
+                    .ToList();
             }
             else
             {
-                times = new ClassTime[]
-                {
-                    ClassTime.CreateClassTime()
-                };
+                times = BuildClassTimes(ClassTimes);
             }
 
             return times;

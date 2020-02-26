@@ -11,6 +11,9 @@ namespace ClassesScheduleSetup
             this.time = time;
         }
 
+        public int Hour => time / 10;
+        public int Minutes => (time % 10) * 6;
+
         public static ClassHourTime FromTime(byte time)
         {
             if (time >= 240)
@@ -108,7 +111,7 @@ namespace ClassesScheduleSetup
 
         public override string ToString()
         {
-            return $"{time / 10:D2}:{(time % 10) * 6:D2}";
+            return $"{Hour:D2}:{Minutes:D2}";
         }
 
         public int CompareTo(ClassHourTime other)
