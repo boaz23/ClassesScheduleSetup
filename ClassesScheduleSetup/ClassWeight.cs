@@ -7,13 +7,20 @@ namespace ClassesScheduleSetup
     internal enum ClassWeights
     {
         Normal = 0,
-        EndsIn8PM = 1 << 10,
-        Thursday_EndsIn12PM = Normal,
-        Thursday_EndsIn1PM = 1 << 5,
-        Thursday_EndsIn2PM = 1 << 6,
-        Thursday_EndsIn3PM = 1 << 12,
-        Thursday_EndsIn4PM = 1 << 13,
-        Thursday_EndsIn5PM = 1 << 14,
-        Thursday_EndsIn6PM = 1 << 15,
+
+        EndsIn5PM = 2,
+        EndsIn6PM = 8,
+        EndsIn7PM = 160,
+        EndsIn8PM = 800,
+
+        Thursday_EndsIn1PM = 10,
+        Thursday_EndsIn2PM = 20,
+        Thursday_EndsIn3PM = 40,
+        Thursday_EndsIn4PM = 80,
+        Thursday_EndsIn5PM = 4000,
+        Thursday_EndsIn6PM = 20000,
+
+        Sebastian_Ben_Daniel = -8,
+        Shahaf_Finder = -2,
     }
 }
