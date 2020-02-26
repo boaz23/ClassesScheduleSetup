@@ -35,22 +35,24 @@ namespace ClassesScheduleSetup
 
         internal ClassAcitivity CreateClassActivity()
         {
-            if (ClassTime == null && ClassTimes.Count == 0)
+            IEnumerable<ClassTime> classTimes = GetClassTimes();
+            if (classTimes == null)
             {
                 throw new InvalidOperationException("No time has been set.");
             }
 
-            return new ClassAcitivity(
+            return new ClassAcitivity
+            (
                 ActivityId,
                 (int)Weight,
-                GetClassTimes()
+                classTimes
             );
         }
 
         internal IEnumerable<ClassTime> GetClassTimes()
         {
-            IEnumerable<ClassTime> times;
-            if (ClassTimes_Concreate != null)
+            IEnumerable<ClassTime> times = null;
+            if (ClassTimes_Concreate.Any())
             {
                 times = ClassTimes_Concreate.ToList();
             }
@@ -59,7 +61,7 @@ namespace ClassesScheduleSetup
                 times = EnumerableExtensions.AsEnumerable(ClassTime.CreateClassTime())
                     .ToList();
             }
-            else
+            else if (ClassTimes.Any())
             {
                 times = BuildClassTimes(ClassTimes);
             }

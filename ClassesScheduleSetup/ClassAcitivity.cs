@@ -25,7 +25,13 @@ namespace ClassesScheduleSetup
 
         public override string ToString()
         {
-            return $"{ActivityId}: {string.Join(", ", Times)}";
+            string s = $"{ActivityId}: {string.Join(", ", Times)}";
+            if (Weight != 0)
+            {
+                s += $", Weight={Weight}";
+            }
+
+            return s;
         }
     }
 }

@@ -6,6 +6,8 @@ namespace ClassesScheduleSetup
 {
     internal static partial class Semesters
     {
+        private delegate void WeighActivityHour(ClassActivityBuilder classActivity, int hour);
+
         static Semesters()
         {
             SemesterC = WeighClasses(SemesterC_Builder()).Build();
@@ -44,26 +46,40 @@ namespace ClassesScheduleSetup
         private static IEnumerable<ClassTime> GetClassTimes(ClassActivityBuilder classActivity)
         {
             IEnumerable<ClassTime> classTimes = classActivity.GetClassTimes();
-            classActivity.ClearAllTimes();
-            classActivity.ClassTimes_Concreate.AddAll(classTimes);
+            if (classTimes != null)
+            {
+                classActivity.ClearAllTimes();
+                classActivity.ClassTimes_Concreate.AddAll(classTimes);
+            }
             return classTimes;
         }
 
         private static void WeightActivity(ClassActivityBuilder classActivity, ClassTime classTime)
         {
+            WeighActivityHour weightFunc;
             if (classTime.Day == DayOfWeek.Thursday)
             {
-                WeighClassActivity_Thursday(classActivity, classTime);
+                weightFunc = WeighClassActivity_Thursday;
             }
             else
             {
-                WeightClassActivity_OtherDay(classActivity, classTime);
+                weightFunc = WeighClassActivity_OtherDay;
+            }
+
+            WeighClassActivity(classActivity, classTime, weightFunc);
+        }
+
+        private static void WeighClassActivity(ClassActivityBuilder classActivity, ClassTime classTime, WeighActivityHour weightFunc)
+        {
+            for (int hour = classTime.Start.Hour + 1; hour <= classTime.End.Hour; hour++)
+            {
+                weightFunc(classActivity, hour);
             }
         }
 
-        private static void WeighClassActivity_Thursday(ClassActivityBuilder classActivity, ClassTime classTime)
+        private static void WeighClassActivity_Thursday(ClassActivityBuilder classActivity, int hour)
         {
-            switch (classTime.End.Hour)
+            switch (hour)
             {
                 case 13:
                     classActivity.Weight += (int)ClassWeights.Thursday_EndsIn1PM;
@@ -88,9 +104,9 @@ namespace ClassesScheduleSetup
             }
         }
 
-        private static void WeightClassActivity_OtherDay(ClassActivityBuilder classActivity, ClassTime classTime)
+        private static void WeighClassActivity_OtherDay(ClassActivityBuilder classActivity, int hour)
         {
-            switch (classTime.End.Hour)
+            switch (hour)
             {
                 case 17:
                     classActivity.Weight += (int)ClassWeights.EndsIn5PM;
