@@ -10,13 +10,13 @@ namespace ClassesScheduleSetup
             {
                 Courses =
                 {
-                    new Course.Builder
+                    new CourseBuilder
                     {
                         Name = "עקרונות שפות תכנות",
                         Id = "202.1.2051",
                         Groups =
                         {
-                            new CourseGroup.Builder
+                            new CourseGroupBuilder
                             {
                                 Lecture = new ClassActivityBuilder
                                 {
@@ -46,7 +46,7 @@ namespace ClassesScheduleSetup
                                     },
                                 },
                             },
-                            new CourseGroup.Builder
+                            new CourseGroupBuilder
                             {
                                 Lecture = new ClassActivityBuilder
                                 {
@@ -76,7 +76,7 @@ namespace ClassesScheduleSetup
                                     },
                                 },
                             },
-                            new CourseGroup.Builder
+                            new CourseGroupBuilder
                             {
                                 Lecture = new ClassActivityBuilder
                                 {
@@ -106,7 +106,7 @@ namespace ClassesScheduleSetup
                                     },
                                 },
                             },
-                            new CourseGroup.Builder
+                            new CourseGroupBuilder
                             {
                                 Lecture = new ClassActivityBuilder
                                 {
@@ -136,7 +136,7 @@ namespace ClassesScheduleSetup
                                     },
                                 },
                             },
-                            new CourseGroup.Builder
+                            new CourseGroupBuilder
                             {
                                 Lecture = new ClassActivityBuilder
                                 {
@@ -163,13 +163,13 @@ namespace ClassesScheduleSetup
                             },
                         },
                     },
-                    new Course.Builder
+                    new CourseBuilder
                     {
                         Name = "ארכיטקטורה במחשבים ומעבדה בתכנות מערכות",
                         Id = "202.1.2091",
                         Groups =
                         {
-                            new CourseGroup.Builder
+                            new CourseGroupBuilder
                             {
                                 Lecture = new ClassActivityBuilder
                                 {
@@ -238,7 +238,7 @@ namespace ClassesScheduleSetup
                                     },
                                 },
                             },
-                            new CourseGroup.Builder
+                            new CourseGroupBuilder
                             {
                                 Lecture = new ClassActivityBuilder
                                 {
@@ -307,7 +307,7 @@ namespace ClassesScheduleSetup
                                     },
                                 },
                             },
-                            new CourseGroup.Builder
+                            new CourseGroupBuilder
                             {
                                 Lecture = new ClassActivityBuilder
                                 {
@@ -376,7 +376,7 @@ namespace ClassesScheduleSetup
                                     },
                                 },
                             },
-                            new CourseGroup.Builder
+                            new CourseGroupBuilder
                             {
                                 Lecture = new ClassActivityBuilder
                                 {
@@ -447,13 +447,13 @@ namespace ClassesScheduleSetup
                             },
                         },
                     },
-                    new Course.Builder
+                    new CourseBuilder
                     {
                         Name = "מודלים חישוביים",
                         Id = "202.1.2011",
                         Groups =
                         {
-                            new CourseGroup.Builder
+                            new CourseGroupBuilder
                             {
                                 Lecture = new ClassActivityBuilder
                                 {
@@ -483,7 +483,7 @@ namespace ClassesScheduleSetup
                                     },
                                 },
                             },
-                            new CourseGroup.Builder
+                            new CourseGroupBuilder
                             {
                                 Lecture = new ClassActivityBuilder
                                 {
@@ -516,7 +516,7 @@ namespace ClassesScheduleSetup
                                     },
                                 },
                             },
-                            new CourseGroup.Builder
+                            new CourseGroupBuilder
                             {
                                 Lecture = new ClassActivityBuilder
                                 {
@@ -546,7 +546,7 @@ namespace ClassesScheduleSetup
                                     },
                                 },
                             },
-                            new CourseGroup.Builder
+                            new CourseGroupBuilder
                             {
                                 Lecture = new ClassActivityBuilder
                                 {
@@ -576,7 +576,7 @@ namespace ClassesScheduleSetup
                                     },
                                 },
                             },
-                            new CourseGroup.Builder
+                            new CourseGroupBuilder
                             {
                                 Lecture = new ClassActivityBuilder
                                 {
@@ -608,13 +608,13 @@ namespace ClassesScheduleSetup
                             },
                         },
                     },
-                    new Course.Builder
+                    new CourseBuilder
                     {
                         Name = "ניתוח ועיצוב מערכות תוכנה",
                         Id = "372.1.3401",
                         Groups =
                         {
-                            new CourseGroup.Builder
+                            new CourseGroupBuilder
                             {
                                 Lecture = new ClassActivityBuilder
                                 {
@@ -646,13 +646,13 @@ namespace ClassesScheduleSetup
                             },
                         },
                     },
-                    new Course.Builder
+                    new CourseBuilder
                     {
                         Name = "סטטיסטיקה להנדסת תוכנה",
                         Id = "372.1.3071",
                         Groups =
                         {
-                            new CourseGroup.Builder
+                            new CourseGroupBuilder
                             {
                                 Lecture = new ClassActivityBuilder
                                 {

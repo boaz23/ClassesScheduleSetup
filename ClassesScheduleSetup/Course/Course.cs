@@ -5,7 +5,7 @@ using static System.Linq.Enumerable;
 
 namespace ClassesScheduleSetup
 {
-    internal class Course
+    public class Course
     {
         public Course(string id, string name, IEnumerable<CourseGroup> groups)
         {
@@ -53,30 +53,6 @@ namespace ClassesScheduleSetup
         public override string ToString()
         {
             return $"{Id} - {Name}";
-        }
-
-        public class Builder
-        {
-            public Builder()
-            {
-                Groups = new List<CourseGroup.Builder>();
-            }
-
-            public string Id { get; set; }
-            public string Name { get; set; }
-            public ICollection<CourseGroup.Builder> Groups { get; }
-
-            public Course Build()
-            {
-                return new Course(Id, Name, CreateGroups(Groups));
-            }
-
-            private static IEnumerable<CourseGroup> CreateGroups(IEnumerable<CourseGroup.Builder> groups)
-            {
-                return groups
-                    .Select(g => g.Build())
-                    .ToList();
-            }
         }
     }
 }

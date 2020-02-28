@@ -4,9 +4,9 @@ using System.Text;
 
 namespace ClassesScheduleSetup
 {
-    internal class ClassAcitivity : IClassActivity
+    public class ClassAcitivity : IClassActivity
     {
-        internal ClassAcitivity(int activityId, int weight, IEnumerable<ClassTime> times)
+        public ClassAcitivity(int activityId, int weight, IEnumerable<ClassTime> times)
         {
             if (activityId <= 0)
             {

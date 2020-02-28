@@ -27,17 +27,17 @@ namespace ClassesScheduleSetup
         {
             public Builder()
             {
-                Courses = new List<Course.Builder>();
+                Courses = new List<CourseBuilder>();
             }
 
-            public ICollection<Course.Builder> Courses { get; }
+            public ICollection<CourseBuilder> Courses { get; }
 
             public Semester Build()
             {
                 return new Semester(BuildCourses(Courses));
             }
 
-            private static IEnumerable<Course> BuildCourses(IEnumerable<Course.Builder> courses)
+            private static IEnumerable<Course> BuildCourses(IEnumerable<CourseBuilder> courses)
             {
                 return courses
                     .Select(c => c.Build())

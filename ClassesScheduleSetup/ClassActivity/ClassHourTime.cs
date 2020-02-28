@@ -2,7 +2,7 @@
 
 namespace ClassesScheduleSetup
 {
-    internal struct ClassHourTime : IComparable<ClassHourTime>, IEquatable<ClassHourTime>
+    public struct ClassHourTime : IComparable<ClassHourTime>, IEquatable<ClassHourTime>
     {
         internal byte time;
 

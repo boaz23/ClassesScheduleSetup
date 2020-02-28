@@ -2,7 +2,7 @@
 
 namespace ClassesScheduleSetup
 {
-    internal struct ClassTimeSpan : IComparable<ClassTimeSpan>, IEquatable<ClassTimeSpan>
+    public struct ClassTimeSpan : IComparable<ClassTimeSpan>, IEquatable<ClassTimeSpan>
     {
         internal short time;
 

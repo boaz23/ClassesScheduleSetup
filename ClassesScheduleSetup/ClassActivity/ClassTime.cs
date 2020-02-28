@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace ClassesScheduleSetup
 {
-    internal struct ClassTime : IEquatable<ClassTime>
+    public struct ClassTime : IEquatable<ClassTime>
     {
         internal DayOfWeek day;
         internal ClassHourTime start;

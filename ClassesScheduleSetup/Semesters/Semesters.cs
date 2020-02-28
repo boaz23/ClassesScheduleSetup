@@ -20,9 +20,9 @@ namespace ClassesScheduleSetup
 
         private static Semester.Builder WeighClasses(Semester.Builder semester)
         {
-            foreach (Course.Builder course in semester.Courses)
+            foreach (CourseBuilder course in semester.Courses)
             {
-                foreach (CourseGroup.Builder group in course.Groups)
+                foreach (CourseGroupBuilder group in course.Groups)
                 {
                     IEnumerable<ClassActivityBuilder> classActivities = GetClassActivities(group);
                     foreach (ClassActivityBuilder classActivity in classActivities)
@@ -39,7 +39,7 @@ namespace ClassesScheduleSetup
             return semester;
         }
 
-        private static IEnumerable<ClassActivityBuilder> GetClassActivities(CourseGroup.Builder group)
+        private static IEnumerable<ClassActivityBuilder> GetClassActivities(CourseGroupBuilder group)
         {
             return EnumerableExtensions.AsEnumerable(group.Lecture)
                 .Concat(group.PracticalClasses)

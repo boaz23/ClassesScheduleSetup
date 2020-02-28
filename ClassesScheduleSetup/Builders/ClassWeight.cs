@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ClassesScheduleSetup
 {
-    internal enum ClassWeights
+    public enum ClassWeights
     {
         Normal = 0,
 

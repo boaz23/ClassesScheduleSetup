@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ClassesScheduleSetup
 {
-    internal interface IClassActivity
+    public interface IClassActivity
     {
         int ActivityId { get; }
         int Weight { get; }
