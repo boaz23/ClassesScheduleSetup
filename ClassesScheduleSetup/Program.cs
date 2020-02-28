@@ -7,7 +7,7 @@ namespace ClassesScheduleSetup
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("he-IL");
             IEnumerable<Course> courses = Semesters.SemesterC.Courses;

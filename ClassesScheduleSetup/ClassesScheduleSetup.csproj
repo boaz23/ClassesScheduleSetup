@@ -13,4 +13,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Utility">
+      <HintPath>..\Lib\Utility.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

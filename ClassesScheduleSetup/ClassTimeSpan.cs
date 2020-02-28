@@ -2,7 +2,7 @@
 
 namespace ClassesScheduleSetup
 {
-    internal struct ClassTimeSpan : IComparable<ClassHourTime>, IEquatable<ClassHourTime>
+    internal struct ClassTimeSpan : IComparable<ClassTimeSpan>, IEquatable<ClassTimeSpan>
     {
         internal short time;
 
@@ -86,12 +86,12 @@ namespace ClassesScheduleSetup
             return $"{time / 10}:{(time % 10) * 6}";
         }
 
-        public int CompareTo(ClassHourTime other)
+        public int CompareTo(ClassTimeSpan other)
         {
             return time.CompareTo(other.time);
         }
 
-        public bool Equals(ClassHourTime other)
+        public bool Equals(ClassTimeSpan other)
         {
             return time == other.time;
         }

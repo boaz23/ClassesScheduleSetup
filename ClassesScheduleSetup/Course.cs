@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using static System.Linq.Enumerable;
 
 namespace ClassesScheduleSetup
@@ -46,7 +47,7 @@ namespace ClassesScheduleSetup
 
         public override int GetHashCode()
         {
-            return Id.GetHashCode();
+            return Id.GetHashCode(StringComparison.CurrentCulture);
         }
 
         public override string ToString()

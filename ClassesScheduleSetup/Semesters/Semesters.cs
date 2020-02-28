@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Utility.Collections.Generic;
+using Utility.Linq;
+
 namespace ClassesScheduleSetup
 {
     internal static partial class Semesters

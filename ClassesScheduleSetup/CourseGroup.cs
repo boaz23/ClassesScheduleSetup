@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using static System.Linq.Enumerable;
 
 namespace ClassesScheduleSetup
@@ -33,7 +34,7 @@ namespace ClassesScheduleSetup
 
         public override string ToString()
         {
-            return Id.ToString();
+            return Id.ToString(System.Globalization.NumberFormatInfo.CurrentInfo);
         }
 
         internal class Builder
