@@ -11,6 +11,11 @@ namespace ClassesScheduleSetup
 
         public ClassTime(DayOfWeek day, ClassHourTime start, ClassHourTime end)
         {
+            if (start > end)
+            {
+                throw new ArgumentException("start must be less than or equal to end.");
+            }
+
             this.start = start;
             this.end = end;
             this.day = day;
@@ -19,6 +24,36 @@ namespace ClassesScheduleSetup
         public DayOfWeek Day => day;
         public ClassHourTime Start => start;
         public ClassHourTime End => end;
+
+        public bool Overlaps(ClassTime other)
+        {
+            return day == other.day &&
+                   start < other.end &&
+                   other.start < end;
+        }
+
+        public bool OverlapsOrContinousWith(ClassTime other) {
+            return day == other.day &&
+                   start <= other.end &&
+                   other.start <= end;
+        }
+
+        public bool IsContinuousWith(ClassTime other)
+        {
+            return day == other.day && (end == other.start || other.start == end);
+        }
+
+        public ClassTime? UnionIfOverlapsOrContinousWith(ClassTime other)
+        {
+            if (OverlapsOrContinousWith(other))
+            {
+                var start = ClassHourTime.Min(this.start, other.start);
+                var end = ClassHourTime.Max(this.end, other.end);
+                return new ClassTime(day, start, end);
+            }
+
+            return null;
+        }
 
         public static bool operator ==(ClassTime x, ClassTime y)
         {

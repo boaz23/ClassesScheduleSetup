@@ -44,6 +44,16 @@ namespace ClassesScheduleSetup
             return new ClassHourTime((byte)time);
         }
 
+        public static ClassHourTime Min(ClassHourTime x, ClassHourTime y)
+        {
+            return x < y ? x : y;
+        }
+
+        public static ClassHourTime Max(ClassHourTime x, ClassHourTime y)
+        {
+            return x < y ? y : x;
+        }
+
         public static ClassTimeSpan operator -(ClassHourTime x, ClassHourTime y)
         {
             return new ClassTimeSpan((short)(x.time - y.time));
