@@ -55,9 +55,9 @@ namespace ClassesScheduleSetup
                 .Select(x => (Schedule: x.First, Placements: x.Second, TimesPerCourse: x.Item3, Times: x.Item4))
                 .ToList();
 
-            var first = zipped[0];
-
-            //.OrderByDescending(x => x.Weight)
+            var orderedSchedules = schedules
+                .OrderBy(x => x.Weight)
+                .ToList();
         }
 
         private static IEnumerable<ClassSchedule> BuildSchedule(Semester semester, bool takePracticeClassFromAllGroups)
