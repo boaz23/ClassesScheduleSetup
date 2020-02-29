@@ -13,8 +13,8 @@ namespace ClassesScheduleSetup
         {
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("he-IL");
 
-            IEnumerable<ClassSchedule> allPermutations = BuildSchedule(Semesters.SemesterC, PracticeClassSource.GroupOnly, OverlappingPolicy.AllowOverlapping);
-            IEnumerable<ClassSchedule> schedules = BuildSchedule(Semesters.SemesterC, PracticeClassSource.GroupOnly, OverlappingPolicy.DisallowOverlapping);
+            IEnumerable<ClassSchedule> allPermutations = BuildSchedule(Semesters.SemesterC, PracticeClassSource.GroupOnly, OverlappingPolicy.AllowOverlapping, PermutationInfo.NoInfo);
+            IEnumerable<ClassSchedule> schedules = BuildSchedule(Semesters.SemesterC, PracticeClassSource.GroupOnly, OverlappingPolicy.DisallowOverlapping, PermutationInfo.ReturnPermutationIndex);
 
             var placements = schedules
                 .Select(x => x.CoursesPlacements.Values)
@@ -62,13 +62,21 @@ namespace ClassesScheduleSetup
                 .ToList();
         }
 
-        private static IEnumerable<ClassSchedule> BuildSchedule(Semester semester, PracticeClassSource practiceClassSource, OverlappingPolicy overlappingPolicy)
+        // TODO: fix to work with all parameters
+        private static IEnumerable<ClassSchedule> BuildSchedule
+        (
+            Semester semester,
+            PracticeClassSource practiceClassSource,
+            OverlappingPolicy overlappingPolicy,
+            PermutationInfo permutationInfo
+        )
         {
             IClassActivityCollection classActivitiesCollection = CreateClassActivityCollectionForPolicy(overlappingPolicy);
             ClassScheduleSetupAlgorithm algorithm = CreateAlgorithm(classActivitiesCollection, practiceClassSource);
             return algorithm.CalculateSetup(semester);
         }
 
+        // TODO: fix to use the flags
         private static IClassActivityCollection CreateClassActivityCollectionForPolicy(OverlappingPolicy overlappingPolicy)
         {
             switch (overlappingPolicy)
@@ -108,6 +116,12 @@ namespace ClassesScheduleSetup
             AllowOverlapping = 1,
             DisallowOverlapping = 2,
             SaveTimeForLaunch = 4,
+        }
+
+        private enum PermutationInfo
+        {
+            NoInfo,
+            ReturnPermutationIndex,
         }
     }
 }

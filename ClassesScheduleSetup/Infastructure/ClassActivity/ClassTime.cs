@@ -6,6 +6,7 @@ using Utility.Linq;
 
 namespace ClassesScheduleSetup
 {
+    // TODO: refactor to use an interval class
     public struct ClassTime : IEquatable<ClassTime>
     {
         internal DayOfWeek day;

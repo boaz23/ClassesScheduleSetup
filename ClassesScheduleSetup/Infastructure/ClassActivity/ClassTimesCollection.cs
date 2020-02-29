@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace ClassesScheduleSetup
 {
+    // TODO: refactor to use an interval tree
     public class ClassTimesCollection : IEnumerable<ClassTime>, ICloneable
     {
         public ClassTimesCollection()
