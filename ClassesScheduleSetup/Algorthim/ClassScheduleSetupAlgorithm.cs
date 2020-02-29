@@ -56,9 +56,7 @@ namespace ClassesScheduleSetup
         {
             IEnumerable<ClassActivities> groupClassActivities = ClassActivitiesForGroup(courses.Current, group);
             var groupClassAcitivitiesEnumerator = ImmutableListEnumerator.FromEnumerable(groupClassActivities);
-            Weight += group.Lecture.Weight();
-            CalculateSetup(courses, group, groupClassAcitivitiesEnumerator);
-            Weight -= group.Lecture.Weight();
+            CalculateSetup(courses, group, groupClassAcitivitiesEnumerator, group.Lecture);
         }
 
         private void CalculateSetup(ImmutableListEnumerator<Course> courses, CourseGroup group, ImmutableListEnumerator<ClassActivities> classActivitiesOfKindEnumerator)
@@ -123,10 +121,11 @@ namespace ClassesScheduleSetup
         {
             IClassActivity lab = CurrentCourseActivities[^1];
             IClassActivity practiceClass = CurrentCourseActivities[^2];
+            IClassActivity lecture = CurrentCourseActivities[^3];
             return new CourseSchedulePlacement
             {
                 Course = course,
-                Lecture = group.Lecture,
+                Lecture = lecture,
                 PracticeClass = practiceClass,
                 Lab = lab,
             };
