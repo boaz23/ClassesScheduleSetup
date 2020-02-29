@@ -7,7 +7,7 @@ namespace ClassesScheduleSetup
 {
     internal class PracticeClassFromAllGroupsSetupAlgorithm : ClassScheduleSetupAlgorithm
     {
-        public PracticeClassFromAllGroupsSetupAlgorithm()
+        public PracticeClassFromAllGroupsSetupAlgorithm(IClassActivitiesCollection classActivitiesCollection) : base(classActivitiesCollection)
         {
             PraticeClasses = new Dictionary<Course, ClassActivities>();
         }

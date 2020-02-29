@@ -8,14 +8,16 @@ namespace ClassesScheduleSetup
     // TODO: add filters for the class activities (e.g. no overlaps and at least 1 hour for launch time)
     public abstract class ClassScheduleSetupAlgorithm
     {
-        public ClassScheduleSetupAlgorithm()
+        public ClassScheduleSetupAlgorithm(IClassActivitiesCollection classActivitiesCollection)
         {
             ClassSchedules = new List<ClassSchedule>();
-            CurrentScheduleBuilder = new ClassScheduleBuilder();
+            CurrentScheduleBuilder = new ClassScheduleBuilder(classActivitiesCollection);
         }
 
         private List<ClassSchedule> ClassSchedules { get; }
         private ClassScheduleBuilder CurrentScheduleBuilder { get; }
+
+        protected abstract IEnumerable<ClassActivities> ClassActivitiesForGroup(Course course, CourseGroup group);
 
         public virtual IEnumerable<ClassSchedule> CalculateSetup(Semester semester)
         {
@@ -25,64 +27,50 @@ namespace ClassesScheduleSetup
         private IEnumerable<ClassSchedule> CalculateSetup(IEnumerable<Course> courses)
         {
             var coursesEnumerator = ImmutableListEnumerator.FromEnumerable(courses);
-            CalculateSetup(coursesEnumerator);
+            CalculateSetup_NextCourse(coursesEnumerator);
             return ClassSchedules;
         }
 
-        private void CalculateSetup(ImmutableListEnumerator<Course> courses)
+        private bool CalculateSetup_NextCourse(ImmutableListEnumerator<Course> courses)
         {
             courses = courses.MoveNext();
             if (courses.HasEnded)
             {
-                ClassSchedules.Add(CurrentScheduleBuilder.BuildSchedule());
-                return;
+                return BuildSchedule();
             }
 
-            foreach (CourseGroup group in courses.Current.Groups)
-            {
-                CalculateSetup(courses, group);
-            }
+            return CalculateSetup_CourseGroups(courses);
         }
 
-        private void CalculateSetup(ImmutableListEnumerator<Course> courses, CourseGroup group)
+        private bool BuildSchedule()
+        {
+            ClassSchedules.Add(CurrentScheduleBuilder.BuildSchedule());
+            return true;
+        }
+
+        private bool CalculateSetup_CourseGroups(ImmutableListEnumerator<Course> courses)
+        {
+            bool atLeastOne = false;
+            foreach (CourseGroup group in courses.Current.Groups)
+            {
+                bool successs = CalculateSetup_NextGroup(courses, group);
+                if (successs)
+                {
+                    atLeastOne = true;
+                }
+            }
+
+            return atLeastOne;
+        }
+
+        private bool CalculateSetup_NextGroup(ImmutableListEnumerator<Course> courses, CourseGroup group)
         {
             IEnumerable<ClassActivities> groupClassActivities = ClassActivitiesForGroup(courses.Current, group);
             var groupClassAcitivitiesEnumerator = ImmutableListEnumerator.FromEnumerable(groupClassActivities);
-            CalculateSetup(courses, group, groupClassAcitivitiesEnumerator, group.Lecture);
+            return CalculateSetup_NextClassActivity(courses, group, groupClassAcitivitiesEnumerator, group.Lecture);
         }
 
-        private void CalculateSetup(ImmutableListEnumerator<Course> courses, CourseGroup group, ImmutableListEnumerator<ClassActivities> classActivitiesOfKindEnumerator)
-        {
-            classActivitiesOfKindEnumerator = classActivitiesOfKindEnumerator.MoveNext();
-            if (classActivitiesOfKindEnumerator.HasEnded)
-            {
-                // next course
-                CurrentScheduleBuilder.BuildCoursePlacement(courses.Current, group);
-                CalculateSetup(courses);
-                CurrentScheduleBuilder.RemoveLastCoursePlacement();
-                return;
-            }
-
-            ClassActivities classActivitiesOfKind = classActivitiesOfKindEnumerator.Current;
-            if (classActivitiesOfKind.IsEmpty())
-            {
-                if (!classActivitiesOfKind.CanBeEmpty)
-                {
-                    throw new InvalidScheduleException();
-                }
-
-                // next kind of activities in the same group
-                CalculateSetup(courses, group, classActivitiesOfKindEnumerator, null);
-                return;
-            }
-
-            foreach (IClassActivity classActivity in classActivitiesOfKind)
-            {
-                CalculateSetup(courses, group, classActivitiesOfKindEnumerator, classActivity);
-            }
-        }
-
-        private void CalculateSetup
+        private bool CalculateSetup_NextClassActivity
         (
             ImmutableListEnumerator<Course> courses,
             CourseGroup group,
@@ -90,11 +78,81 @@ namespace ClassesScheduleSetup
             IClassActivity classActivity
         )
         {
-            CurrentScheduleBuilder.AddClassActivity(classActivity);
-            CalculateSetup(courses, group, classActivitiesOfKindEnumerator);
+            if (!CurrentScheduleBuilder.AddClassActivity(classActivity))
+            {
+                return false;
+            }
+            CalculateSetup_NextKindOfClassActivities(courses, group, classActivitiesOfKindEnumerator);
             CurrentScheduleBuilder.RemoveLastClassActivity();
+            return true;
         }
 
-        protected abstract IEnumerable<ClassActivities> ClassActivitiesForGroup(Course course, CourseGroup group);
+        private bool CalculateSetup_NextKindOfClassActivities
+        (
+            ImmutableListEnumerator<Course> courses,
+            CourseGroup group,
+            ImmutableListEnumerator<ClassActivities> classActivitiesOfKindEnumerator
+        )
+        {
+            classActivitiesOfKindEnumerator = classActivitiesOfKindEnumerator.MoveNext();
+            if (classActivitiesOfKindEnumerator.HasEnded)
+            {
+                return CalculateSetup_BuildCoursePlacement(courses, group);
+            }
+
+            ClassActivities classActivitiesOfKind = classActivitiesOfKindEnumerator.Current;
+            if (classActivitiesOfKind.IsEmpty())
+            {
+                return CalculateSetup_EmptyKindOfClassActivities(courses, group, classActivitiesOfKindEnumerator, classActivitiesOfKind);
+            }
+            else
+            {
+                return CalculateSetup_ClassActivitiesOfKind(courses, group, classActivitiesOfKindEnumerator, classActivitiesOfKind);
+            }
+        }
+
+        private bool CalculateSetup_BuildCoursePlacement(ImmutableListEnumerator<Course> courses, CourseGroup group)
+        {
+            CurrentScheduleBuilder.BuildCoursePlacement(courses.Current, group);
+            CalculateSetup_NextCourse(courses);
+            CurrentScheduleBuilder.RemoveLastCoursePlacement();
+            return true;
+        }
+
+        private bool CalculateSetup_EmptyKindOfClassActivities
+        (
+            ImmutableListEnumerator<Course> courses,
+            CourseGroup group,
+            ImmutableListEnumerator<ClassActivities> classActivitiesOfKindEnumerator,
+            ClassActivities classActivitiesOfKind)
+        {
+            if (!classActivitiesOfKind.CanBeEmpty)
+            {
+                throw new InvalidScheduleException("The class activities cannot be empty");
+            }
+
+            return CalculateSetup_NextClassActivity(courses, group, classActivitiesOfKindEnumerator, null);
+        }
+
+        private bool CalculateSetup_ClassActivitiesOfKind
+        (
+            ImmutableListEnumerator<Course> courses,
+            CourseGroup group,
+            ImmutableListEnumerator<ClassActivities> classActivitiesOfKindEnumerator,
+            ClassActivities classActivitiesOfKind
+        )
+        {
+            bool atLeastOne = false;
+            foreach (IClassActivity classActivity in classActivitiesOfKind)
+            {
+                bool successs = CalculateSetup_NextClassActivity(courses, group, classActivitiesOfKindEnumerator, classActivity);
+                if (successs)
+                {
+                    atLeastOne = true;
+                }
+            }
+
+            return atLeastOne;
+        }
     }
 }

@@ -6,27 +6,28 @@ using Utility.Collections.Generic;
 
 namespace ClassesScheduleSetup
 {
-    internal class ClassActivitiesCollection
+    public class ClassActivitiesCollection : IClassActivitiesCollection
     {
         public ClassActivitiesCollection()
         {
-            Weight = 0;
+            TotalWeight = 0;
             CurrentCourseActivities = new List<IClassActivity>();
         }
 
-        public int Weight { get; protected set; }
+        public int TotalWeight { get; protected set; }
         protected List<IClassActivity> CurrentCourseActivities { get; }
 
-        public virtual void Add(IClassActivity classActivity)
+        public virtual bool Add(IClassActivity classActivity)
         {
             CurrentCourseActivities.Add(classActivity);
-            Weight += classActivity.Weight();
+            TotalWeight += classActivity.Weight();
+            return true;
         }
 
         public virtual void RemoveLast()
         {
             IClassActivity classActivity = CurrentCourseActivities.RemoveLast();
-            Weight -= classActivity.Weight();
+            TotalWeight -= classActivity.Weight();
         }
 
         public virtual CourseSchedulePlacement BuildCoursePlacement(Course course, CourseGroup group)

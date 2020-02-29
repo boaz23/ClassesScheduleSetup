@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Utility.Collections.Generic;
@@ -7,18 +8,23 @@ namespace ClassesScheduleSetup
 {
     internal class ClassScheduleBuilder
     {
-        public ClassScheduleBuilder()
+        public ClassScheduleBuilder(IClassActivitiesCollection classActivitiesCollection)
         {
+            if (classActivitiesCollection is null)
+            {
+                throw new ArgumentNullException(nameof(classActivitiesCollection));
+            }
+
             CurrentPlacements = new List<CourseSchedulePlacement>();
-            CurrentCourseActivities = new ClassActivitiesCollection();
+            CurrentCourseActivities = classActivitiesCollection;
         }
 
-        private ClassActivitiesCollection CurrentCourseActivities { get; }
+        private IClassActivitiesCollection CurrentCourseActivities { get; }
         private List<CourseSchedulePlacement> CurrentPlacements { get; }
 
-        public void AddClassActivity(IClassActivity classActivity)
+        public bool AddClassActivity(IClassActivity classActivity)
         {
-            CurrentCourseActivities.Add(classActivity);
+            return CurrentCourseActivities.Add(classActivity);
         }
 
         public void RemoveLastClassActivity()
@@ -39,7 +45,7 @@ namespace ClassesScheduleSetup
 
         public ClassSchedule BuildSchedule()
         {
-            return new ClassSchedule(BuildScheduleMap(), CurrentCourseActivities.Weight);
+            return new ClassSchedule(BuildScheduleMap(), CurrentCourseActivities.TotalWeight);
         }
 
         private IDictionary<Course, CourseSchedulePlacement> BuildScheduleMap()

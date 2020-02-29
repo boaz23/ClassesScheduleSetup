@@ -6,6 +6,10 @@ namespace ClassesScheduleSetup
 {
     internal class PracticeClassFromGroupOnlySetupAlgorithm : ClassScheduleSetupAlgorithm
     {
+        public PracticeClassFromGroupOnlySetupAlgorithm(IClassActivitiesCollection classActivitiesCollection) : base(classActivitiesCollection)
+        {
+        }
+
         protected override IEnumerable<ClassActivities> ClassActivitiesForGroup(Course course, CourseGroup group)
         {
             return EnumerableExtensions.AsEnumerable
