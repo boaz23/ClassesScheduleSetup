@@ -62,7 +62,7 @@ namespace ClassesScheduleSetup
 
         private static IEnumerable<ClassSchedule> BuildSchedule(Semester semester, bool takePracticeClassFromAllGroups)
         {
-            IClassActivitiesCollection classActivitiesCollection = new ClassActivitiesCollection();
+            IClassActivityCollection classActivitiesCollection = new ClassActivitiesCollection();
             ClassScheduleSetupAlgorithm algorithm;
             if (takePracticeClassFromAllGroups)
             {

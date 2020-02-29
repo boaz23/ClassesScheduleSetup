@@ -6,9 +6,9 @@ using Utility.Linq;
 
 namespace ClassesScheduleSetup
 {
-    public class ClassActivities : IEnumerable<IClassActivity>
+    public class ClassActivitiesInfo : IEnumerable<IClassActivity>
     {
-        internal ClassActivities(IEnumerable<IClassActivity> classActivities, bool canBeEmpty)
+        internal ClassActivitiesInfo(IEnumerable<IClassActivity> classActivities, bool canBeEmpty)
         {
             if (classActivities is null)
             {

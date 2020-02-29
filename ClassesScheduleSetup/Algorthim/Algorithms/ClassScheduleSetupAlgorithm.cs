@@ -8,7 +8,7 @@ namespace ClassesScheduleSetup
     // TODO: add filters for the class activities (e.g. no overlaps and at least 1 hour for launch time)
     public abstract class ClassScheduleSetupAlgorithm
     {
-        public ClassScheduleSetupAlgorithm(IClassActivitiesCollection classActivitiesCollection)
+        public ClassScheduleSetupAlgorithm(IClassActivityCollection classActivitiesCollection)
         {
             ClassSchedules = new List<ClassSchedule>();
             CurrentScheduleBuilder = new ClassScheduleBuilder(classActivitiesCollection);
@@ -17,7 +17,7 @@ namespace ClassesScheduleSetup
         private List<ClassSchedule> ClassSchedules { get; }
         private ClassScheduleBuilder CurrentScheduleBuilder { get; }
 
-        protected abstract IEnumerable<ClassActivities> ClassActivitiesForGroup(Course course, CourseGroup group);
+        protected abstract IEnumerable<ClassActivitiesInfo> ClassActivitiesForGroup(Course course, CourseGroup group);
 
         public virtual IEnumerable<ClassSchedule> CalculateSetup(Semester semester)
         {
@@ -65,7 +65,7 @@ namespace ClassesScheduleSetup
 
         private bool CalculateSetup_NextGroup(ImmutableListEnumerator<Course> courses, CourseGroup group)
         {
-            IEnumerable<ClassActivities> groupClassActivities = ClassActivitiesForGroup(courses.Current, group);
+            IEnumerable<ClassActivitiesInfo> groupClassActivities = ClassActivitiesForGroup(courses.Current, group);
             var groupClassAcitivitiesEnumerator = ImmutableListEnumerator.FromEnumerable(groupClassActivities);
             return CalculateSetup_NextClassActivity(courses, group, groupClassAcitivitiesEnumerator, group.Lecture);
         }
@@ -74,7 +74,7 @@ namespace ClassesScheduleSetup
         (
             ImmutableListEnumerator<Course> courses,
             CourseGroup group,
-            ImmutableListEnumerator<ClassActivities> classActivitiesOfKindEnumerator,
+            ImmutableListEnumerator<ClassActivitiesInfo> classActivitiesOfKindEnumerator,
             IClassActivity classActivity
         )
         {
@@ -91,7 +91,7 @@ namespace ClassesScheduleSetup
         (
             ImmutableListEnumerator<Course> courses,
             CourseGroup group,
-            ImmutableListEnumerator<ClassActivities> classActivitiesOfKindEnumerator
+            ImmutableListEnumerator<ClassActivitiesInfo> classActivitiesOfKindEnumerator
         )
         {
             classActivitiesOfKindEnumerator = classActivitiesOfKindEnumerator.MoveNext();
@@ -100,7 +100,7 @@ namespace ClassesScheduleSetup
                 return CalculateSetup_BuildCoursePlacement(courses, group);
             }
 
-            ClassActivities classActivitiesOfKind = classActivitiesOfKindEnumerator.Current;
+            ClassActivitiesInfo classActivitiesOfKind = classActivitiesOfKindEnumerator.Current;
             if (classActivitiesOfKind.IsEmpty())
             {
                 return CalculateSetup_EmptyKindOfClassActivities(courses, group, classActivitiesOfKindEnumerator, classActivitiesOfKind);
@@ -123,8 +123,8 @@ namespace ClassesScheduleSetup
         (
             ImmutableListEnumerator<Course> courses,
             CourseGroup group,
-            ImmutableListEnumerator<ClassActivities> classActivitiesOfKindEnumerator,
-            ClassActivities classActivitiesOfKind)
+            ImmutableListEnumerator<ClassActivitiesInfo> classActivitiesOfKindEnumerator,
+            ClassActivitiesInfo classActivitiesOfKind)
         {
             if (!classActivitiesOfKind.CanBeEmpty)
             {
@@ -138,8 +138,8 @@ namespace ClassesScheduleSetup
         (
             ImmutableListEnumerator<Course> courses,
             CourseGroup group,
-            ImmutableListEnumerator<ClassActivities> classActivitiesOfKindEnumerator,
-            ClassActivities classActivitiesOfKind
+            ImmutableListEnumerator<ClassActivitiesInfo> classActivitiesOfKindEnumerator,
+            ClassActivitiesInfo classActivitiesOfKind
         )
         {
             bool atLeastOne = false;

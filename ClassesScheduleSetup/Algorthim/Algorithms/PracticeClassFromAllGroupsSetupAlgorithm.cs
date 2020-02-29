@@ -7,12 +7,12 @@ namespace ClassesScheduleSetup
 {
     internal class PracticeClassFromAllGroupsSetupAlgorithm : ClassScheduleSetupAlgorithm
     {
-        public PracticeClassFromAllGroupsSetupAlgorithm(IClassActivitiesCollection classActivitiesCollection) : base(classActivitiesCollection)
+        public PracticeClassFromAllGroupsSetupAlgorithm(IClassActivityCollection classActivitiesCollection) : base(classActivitiesCollection)
         {
-            PraticeClasses = new Dictionary<Course, ClassActivities>();
+            PraticeClasses = new Dictionary<Course, ClassActivitiesInfo>();
         }
 
-        private IDictionary<Course, ClassActivities> PraticeClasses { get; }
+        private IDictionary<Course, ClassActivitiesInfo> PraticeClasses { get; }
 
         public override IEnumerable<ClassSchedule> CalculateSetup(Semester semester)
         {
@@ -20,9 +20,13 @@ namespace ClassesScheduleSetup
             return base.CalculateSetup(semester);
         }
 
-        protected override IEnumerable<ClassActivities> ClassActivitiesForGroup(Course course, CourseGroup group)
+        protected override IEnumerable<ClassActivitiesInfo> ClassActivitiesForGroup(Course course, CourseGroup group)
         {
-            return EnumerableExtensions.AsEnumerable(PraticeClasses[course], new ClassActivities(group.Labs, true));
+            return EnumerableExtensions.AsEnumerable
+            (
+                PraticeClasses[course],
+                new ClassActivitiesInfo(group.Labs, true)
+            );
         }
 
         private void BuildPraticeClasses(IEnumerable<Course> courses)
@@ -36,7 +40,7 @@ namespace ClassesScheduleSetup
 
         private void BuildPraticeClassesForCourse(Course course)
         {
-            PraticeClasses[course] = new ClassActivities(GetAllPracticeClassesOfCourse(course), false);
+            PraticeClasses[course] = new ClassActivitiesInfo(GetAllPracticeClassesOfCourse(course), false);
         }
 
         private IEnumerable<IClassActivity> GetAllPracticeClassesOfCourse(Course course)

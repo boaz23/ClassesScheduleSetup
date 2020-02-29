@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ClassesScheduleSetup
+﻿namespace ClassesScheduleSetup
 {
-    public interface IClassActivitiesCollection
+    public interface IClassActivityCollection
     {
         int TotalWeight { get; }
 

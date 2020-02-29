@@ -8,7 +8,7 @@ namespace ClassesScheduleSetup
 {
     internal class ClassScheduleBuilder
     {
-        public ClassScheduleBuilder(IClassActivitiesCollection classActivitiesCollection)
+        public ClassScheduleBuilder(IClassActivityCollection classActivitiesCollection)
         {
             if (classActivitiesCollection is null)
             {
@@ -19,7 +19,7 @@ namespace ClassesScheduleSetup
             CurrentCourseActivities = classActivitiesCollection;
         }
 
-        private IClassActivitiesCollection CurrentCourseActivities { get; }
+        private IClassActivityCollection CurrentCourseActivities { get; }
         private List<CourseSchedulePlacement> CurrentPlacements { get; }
 
         public bool AddClassActivity(IClassActivity classActivity)

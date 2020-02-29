@@ -6,7 +6,7 @@ using Utility.Collections.Generic;
 
 namespace ClassesScheduleSetup
 {
-    public class ClassActivitiesCollection : IClassActivitiesCollection
+    public class ClassActivitiesCollection : IClassActivityCollection
     {
         public ClassActivitiesCollection()
         {
