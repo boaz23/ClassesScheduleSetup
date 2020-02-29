@@ -13,6 +13,7 @@ namespace ClassesScheduleSetup
         {
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("he-IL");
 
+            IEnumerable<ClassSchedule> allPermutations = BuildSchedule(Semesters.SemesterC, PracticeClassSource.GroupOnly, OverlappingPolicy.AllowOverlapping);
             IEnumerable<ClassSchedule> schedules = BuildSchedule(Semesters.SemesterC, PracticeClassSource.GroupOnly, OverlappingPolicy.DisallowOverlapping);
 
             var placements = schedules
