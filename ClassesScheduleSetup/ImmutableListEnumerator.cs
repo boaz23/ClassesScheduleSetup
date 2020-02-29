@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ClassesScheduleSetup
 {
@@ -12,6 +13,7 @@ namespace ClassesScheduleSetup
         }
     }
 
+    [DebuggerDisplay("{Current}")]
     public class ImmutableListEnumerator<T> : IEnumerable<T>
     {
         private int index;

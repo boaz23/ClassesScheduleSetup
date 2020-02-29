@@ -1,30 +1,33 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
+using ClassesScheduleSetup.ClassActivity;
+
+using Utility.Collections.Generic;
 using Utility.Linq;
 
 namespace ClassesScheduleSetup
 {
+    // TODO: resource cleanup (e.g. enumerators)
+    // TODO: add filters for the class activities (e.g. no overlaps and at least 1 hour for launch time)
     public abstract class ClassScheduleSetupAlgorithm
     {
         public ClassScheduleSetupAlgorithm()
         {
             Weight = 0;
             ClassSchedules = new List<ClassSchedule>();
-            CurrentPlacements = new Stack<CourseSchedulePlacement>();
-            CurrentCourseActivities = new Stack<IClassActivity>();
+            CurrentPlacements = new List<CourseSchedulePlacement>();
+            CurrentCourseActivities = new List<IClassActivity>();
         }
 
         private List<ClassSchedule> ClassSchedules { get; }
-        private Stack<CourseSchedulePlacement> CurrentPlacements { get; }
-        private Stack<IClassActivity> CurrentCourseActivities { get; }
+        private List<CourseSchedulePlacement> CurrentPlacements { get; }
+        private List<IClassActivity> CurrentCourseActivities { get; }
         private int Weight { get; set; }
 
         public virtual IEnumerable<ClassSchedule> CalculateSetup(Semester semester)
         {
-            return CalculateSetup(semester.Courses)
-                .OrderByDescending(x => x.Weight)
-                .ToList();
+            return CalculateSetup(semester.Courses);
         }
 
         private IEnumerable<ClassSchedule> CalculateSetup(IEnumerable<Course> courses)
@@ -36,19 +39,14 @@ namespace ClassesScheduleSetup
 
         private void CalculateSetup(ImmutableListEnumerator<Course> courses)
         {
-            ImmutableListEnumerator<Course> nextCourse = courses.MoveNext();
-            if (nextCourse.HasEnded)
+            courses = courses.MoveNext();
+            if (courses.HasEnded)
             {
                 ClassSchedules.Add(BuildSchedule());
                 return;
             }
 
-            CalculateSetup(courses, nextCourse.Current);
-        }
-
-        private void CalculateSetup(ImmutableListEnumerator<Course> courses, Course course)
-        {
-            foreach (CourseGroup group in course.Groups)
+            foreach (CourseGroup group in courses.Current.Groups)
             {
                 CalculateSetup(courses, group);
             }
@@ -58,23 +56,20 @@ namespace ClassesScheduleSetup
         {
             IEnumerable<ClassActivities> groupClassActivities = ClassActivitiesForGroup(courses.Current, group);
             var groupClassAcitivitiesEnumerator = ImmutableListEnumerator.FromEnumerable(groupClassActivities);
+            Weight += group.Lecture.Weight();
             CalculateSetup(courses, group, groupClassAcitivitiesEnumerator);
+            Weight -= group.Lecture.Weight();
         }
 
         private void CalculateSetup(ImmutableListEnumerator<Course> courses, CourseGroup group, ImmutableListEnumerator<ClassActivities> classActivitiesOfKindEnumerator)
         {
-            ImmutableListEnumerator<ClassActivities> nextClassActivitiesOfKind = classActivitiesOfKindEnumerator.MoveNext();
-            if (nextClassActivitiesOfKind.HasEnded)
+            classActivitiesOfKindEnumerator = classActivitiesOfKindEnumerator.MoveNext();
+            if (classActivitiesOfKindEnumerator.HasEnded)
             {
-                if (CurrentPlacements.Count == 0 || CurrentPlacements.Peek().Course != courses.Current)
-                {
-                    throw new InvalidScheduleException();
-                }
-
                 // next course
-                CurrentPlacements.Push(BuildCoursePlacement(courses.Current, group));
+                CurrentPlacements.Add(BuildCoursePlacement(courses.Current, group));
                 CalculateSetup(courses);
-                CurrentPlacements.Pop();
+                CurrentPlacements.RemoveLast();
                 return;
             }
 
@@ -87,25 +82,36 @@ namespace ClassesScheduleSetup
                 }
 
                 // next kind of activities in the same group
-                CurrentCourseActivities.Push(null);
-                CalculateSetup(courses, group, classActivitiesOfKindEnumerator);
+                CalculateSetup(courses, group, classActivitiesOfKindEnumerator, null);
+                return;
             }
 
             foreach (IClassActivity classActivity in classActivitiesOfKind)
             {
-                CurrentCourseActivities.Push(classActivity);
-                Weight += classActivity.Weight;
-                CalculateSetup(courses, group, classActivitiesOfKindEnumerator);
+                CalculateSetup(courses, group, classActivitiesOfKindEnumerator, classActivity);
             }
+        }
+
+        private void CalculateSetup
+        (
+            ImmutableListEnumerator<Course> courses,
+            CourseGroup group,
+            ImmutableListEnumerator<ClassActivities> classActivitiesOfKindEnumerator,
+            IClassActivity classActivity
+        )
+        {
+            CurrentCourseActivities.Add(classActivity);
+            Weight += classActivity.Weight();
+            CalculateSetup(courses, group, classActivitiesOfKindEnumerator);
+            Weight -= classActivity.Weight();
+            CurrentCourseActivities.RemoveLast();
         }
 
         protected abstract IEnumerable<ClassActivities> ClassActivitiesForGroup(Course course, CourseGroup group);
 
         private ClassSchedule BuildSchedule()
         {
-            var schedule = new ClassSchedule(BuildScheduleMap(), Weight);
-            CurrentPlacements.Clear();
-            return schedule;
+            return new ClassSchedule(BuildScheduleMap(), Weight);
         }
 
         private IDictionary<Course, CourseSchedulePlacement> BuildScheduleMap()
@@ -115,9 +121,8 @@ namespace ClassesScheduleSetup
 
         private CourseSchedulePlacement BuildCoursePlacement(Course course, CourseGroup group)
         {
-            IClassActivity lab = CurrentCourseActivities.Pop();
-            IClassActivity practiceClass = CurrentCourseActivities.Pop();
-            Weight -= lab.Weight + practiceClass.Weight;
+            IClassActivity lab = CurrentCourseActivities[^1];
+            IClassActivity practiceClass = CurrentCourseActivities[^2];
             return new CourseSchedulePlacement
             {
                 Course = course,

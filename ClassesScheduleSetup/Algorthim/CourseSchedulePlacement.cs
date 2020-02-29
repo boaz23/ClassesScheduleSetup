@@ -1,5 +1,8 @@
-﻿namespace ClassesScheduleSetup
+﻿using System.Diagnostics;
+
+namespace ClassesScheduleSetup
 {
+    [DebuggerDisplay("{Course}, {Lecture.ActivityId}, {PracticeClass.ActivityId}, {Lab.ActivityId}")]
     public class CourseSchedulePlacement
     {
         public Course Course { get; set; }

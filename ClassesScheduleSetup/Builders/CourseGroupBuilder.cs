@@ -23,11 +23,12 @@ namespace ClassesScheduleSetup
                 throw new InvalidOperationException("The lecture must be set first.");
             }
 
-            IClassActivity lecture = Lecture.CreateClassActivity();
+            ClassAcitivity lecture = Lecture.CreateClassActivity();
             IEnumerable<ClassAcitivity> practicalClasses = BuildClassActivities(PracticalClasses);
             IEnumerable<ClassAcitivity> labs = BuildClassActivities(Labs);
             var group = new CourseGroup(lecture, practicalClasses, labs);
 
+            lecture.Group = group;
             SetGroup(group, practicalClasses);
             SetGroup(group, labs);
             return group;

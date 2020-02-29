@@ -10,7 +10,10 @@ namespace ClassesScheduleSetup
         static void Main()
         {
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("he-IL");
-            IEnumerable<ClassSchedule> schedules = BuildSchedule(Semesters.SemesterC, false);
+            var schedules = BuildSchedule(Semesters.SemesterC, false)
+                //.OrderByDescending(x => x.Weight)
+                .Select(x => x.CoursesPlacements.Values)
+                .ToList();
         }
 
         private static IEnumerable<ClassSchedule> BuildSchedule(Semester semester, bool takePracticeClassFromAllGroups)
