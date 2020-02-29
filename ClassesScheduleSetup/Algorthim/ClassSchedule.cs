@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 
 using Utility.Linq;
 
 namespace ClassesScheduleSetup
 {
-    internal class ClassSchedule
+    public class ClassSchedule
     {
-        public ClassSchedule(ILookup<Course, CourseSchedulePlacement> placements, int weight)
+        public ClassSchedule(IDictionary<Course, CourseSchedulePlacement> placements, int weight)
         {
             if (EnumerableExtensions.IsNullOrEmpty(placements))
             {
@@ -18,7 +18,7 @@ namespace ClassesScheduleSetup
             Weight = weight;
         }
 
-        public ILookup<Course, CourseSchedulePlacement> CoursesPlacements { get; }
+        public IDictionary<Course, CourseSchedulePlacement> CoursesPlacements { get; }
         public int Weight { get; }
     }
 }

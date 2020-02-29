@@ -1,6 +1,6 @@
 ﻿namespace ClassesScheduleSetup
 {
-    internal class CourseSchedulePlacement
+    public class CourseSchedulePlacement
     {
         public Course Course { get; set; }
         public IClassActivity Lecture { get; set; }

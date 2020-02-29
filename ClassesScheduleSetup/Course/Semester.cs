@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ClassesScheduleSetup
 {
-    internal class Semester
+    public class Semester
     {
         internal Semester(IEnumerable<Course> courses)
         {
