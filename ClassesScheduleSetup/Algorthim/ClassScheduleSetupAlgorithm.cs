@@ -20,10 +20,10 @@ namespace ClassesScheduleSetup
             CurrentCourseActivities = new List<IClassActivity>();
         }
 
+        private int Weight { get; set; }
         private List<ClassSchedule> ClassSchedules { get; }
         private List<CourseSchedulePlacement> CurrentPlacements { get; }
         private List<IClassActivity> CurrentCourseActivities { get; }
-        private int Weight { get; set; }
 
         public virtual IEnumerable<ClassSchedule> CalculateSetup(Semester semester)
         {

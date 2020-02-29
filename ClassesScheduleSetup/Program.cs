@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
-using static System.Linq.Enumerable;
+using System.Linq;
+
+using Utility.Linq;
 
 namespace ClassesScheduleSetup
 {
@@ -10,10 +11,53 @@ namespace ClassesScheduleSetup
         static void Main()
         {
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("he-IL");
-            var schedules = BuildSchedule(Semesters.SemesterC, false)
-                //.OrderByDescending(x => x.Weight)
+
+            IEnumerable<ClassSchedule> schedules = BuildSchedule(Semesters.SemesterC, false);
+
+            var placements = schedules
                 .Select(x => x.CoursesPlacements.Values)
                 .ToList();
+
+            var timesPerCourse = placements
+                .Select(x => x.Select(y =>
+                {
+                    IEnumerable<ClassTime> classTimes = Enumerable.Empty<ClassTime>();
+                    IEnumerable<IClassActivity> classActivities = EnumerableExtensions.AsEnumerable(y.Lecture, y.PracticeClass, y.Lab);
+                    foreach (IClassActivity classActivity in classActivities)
+                    {
+                        if (classActivity != null)
+                        {
+                            classTimes = classTimes.Concat(classActivity.Times);
+                        }
+                    }
+
+                    return classTimes;
+                }))
+                .Select(x => x
+                    .Select(y => y.ToList())
+                    .ToList()
+                )
+                .ToList();
+
+            var times = timesPerCourse
+                .Select(x => x.SelectMany(y => y))
+                .Select(x => x
+                    .OrderBy(y => y.Day)
+                    .ThenBy(y => y.Start)
+                    .ToList()
+                )
+                .ToList();
+
+            var zipped = schedules
+                .Zip(placements)
+                .Zip(timesPerCourse, (tuple, second) => (tuple.First, tuple.Second, second))
+                .Zip(times, (tuple, second) => (tuple.First, tuple.Second, tuple.second, second))
+                .Select(x => (Schedule: x.First, Placements: x.Second, TimesPerCourse: x.Item3, Times: x.Item4))
+                .ToList();
+
+            var first = zipped[0];
+
+            //.OrderByDescending(x => x.Weight)
         }
 
         private static IEnumerable<ClassSchedule> BuildSchedule(Semester semester, bool takePracticeClassFromAllGroups)
