@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ClassesScheduleSetup
+﻿namespace ClassesScheduleSetup
 {
-    public enum ClassWeights
+    public enum ClassActivityWeight
     {
         Normal = 0,
 

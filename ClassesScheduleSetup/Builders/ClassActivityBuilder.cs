@@ -11,7 +11,7 @@ namespace ClassesScheduleSetup
     {
         public ClassActivityBuilder()
         {
-            Weight = ClassWeights.Normal;
+            Weight = ClassActivityWeight.Normal;
             ClassTimes = new List<ClassTimeBuilder>();
             ClassTimes_Concreate = new List<ClassTime>();
         }
@@ -21,7 +21,7 @@ namespace ClassesScheduleSetup
         }
 
         public int ActivityId { get; set; }
-        public ClassWeights Weight { get; set; }
+        public ClassActivityWeight Weight { get; set; }
         public ClassTimeBuilder ClassTime { get; set; }
         public ICollection<ClassTimeBuilder> ClassTimes { get; }
 

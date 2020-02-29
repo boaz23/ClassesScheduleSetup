@@ -85,22 +85,22 @@ namespace ClassesScheduleSetup
             switch (hour)
             {
                 case 13:
-                    classActivity.Weight += (int)ClassWeights.Thursday_EndsIn1PM;
+                    classActivity.Weight += (int)ClassActivityWeight.Thursday_EndsIn1PM;
                     break;
                 case 14:
-                    classActivity.Weight += (int)ClassWeights.Thursday_EndsIn2PM;
+                    classActivity.Weight += (int)ClassActivityWeight.Thursday_EndsIn2PM;
                     break;
                 case 15:
-                    classActivity.Weight += (int)ClassWeights.Thursday_EndsIn3PM;
+                    classActivity.Weight += (int)ClassActivityWeight.Thursday_EndsIn3PM;
                     break;
                 case 16:
-                    classActivity.Weight += (int)ClassWeights.Thursday_EndsIn4PM;
+                    classActivity.Weight += (int)ClassActivityWeight.Thursday_EndsIn4PM;
                     break;
                 case 17:
-                    classActivity.Weight += (int)ClassWeights.Thursday_EndsIn5PM;
+                    classActivity.Weight += (int)ClassActivityWeight.Thursday_EndsIn5PM;
                     break;
                 case 18:
-                    classActivity.Weight += (int)ClassWeights.Thursday_EndsIn6PM;
+                    classActivity.Weight += (int)ClassActivityWeight.Thursday_EndsIn6PM;
                     break;
                 default:
                     break;
@@ -112,16 +112,16 @@ namespace ClassesScheduleSetup
             switch (hour)
             {
                 case 17:
-                    classActivity.Weight += (int)ClassWeights.EndsIn5PM;
+                    classActivity.Weight += (int)ClassActivityWeight.EndsIn5PM;
                     break;
                 case 18:
-                    classActivity.Weight += (int)ClassWeights.EndsIn6PM;
+                    classActivity.Weight += (int)ClassActivityWeight.EndsIn6PM;
                     break;
                 case 19:
-                    classActivity.Weight += (int)ClassWeights.EndsIn7PM;
+                    classActivity.Weight += (int)ClassActivityWeight.EndsIn7PM;
                     break;
                 case 20:
-                    classActivity.Weight += (int)ClassWeights.EndsIn8PM;
+                    classActivity.Weight += (int)ClassActivityWeight.EndsIn8PM;
                     break;
                 default:
                     break;

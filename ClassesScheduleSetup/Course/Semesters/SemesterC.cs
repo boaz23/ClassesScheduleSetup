@@ -493,7 +493,7 @@ namespace ClassesScheduleSetup
                                         new ClassTimeBuilder(DayOfWeek.Sunday,    "10:00", "12:00"),
                                         new ClassTimeBuilder(DayOfWeek.Wednesday, "16:00", "18:00"),
                                     },
-                                    Weight = ClassWeights.Sebastian_Ben_Daniel,
+                                    Weight = ClassActivityWeight.Sebastian_Ben_Daniel,
                                 },
                                 PracticalClasses =
                                 {
@@ -506,13 +506,13 @@ namespace ClassesScheduleSetup
                                     {
                                         ActivityId = 22,
                                         ClassTime = new ClassTimeBuilder(DayOfWeek.Thursday, "12:00", "14:00"),
-                                        Weight = ClassWeights.Shahaf_Finder,
+                                        Weight = ClassActivityWeight.Shahaf_Finder,
                                     },
                                     new ClassActivityBuilder
                                     {
                                         ActivityId = 23,
                                         ClassTime = new ClassTimeBuilder(DayOfWeek.Thursday, "14:00", "16:00"),
-                                        Weight = ClassWeights.Shahaf_Finder,
+                                        Weight = ClassActivityWeight.Shahaf_Finder,
                                     },
                                 },
                             },
