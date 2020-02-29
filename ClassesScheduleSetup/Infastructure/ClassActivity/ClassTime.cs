@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+
+using Utility.Linq;
 
 namespace ClassesScheduleSetup
 {
@@ -53,6 +56,31 @@ namespace ClassesScheduleSetup
             }
 
             return null;
+        }
+
+        public IEnumerable<ClassTime> Subtract(ClassTime other)
+        {
+            if (!Overlaps(other))
+            {
+                return EnumerableExtensions.AsEnumerable(this);
+            }
+
+            var result = new List<ClassTime>(2);
+            if (Contains(other.start))
+            {
+                result.Add(new ClassTime(day, start, other.start));
+            }
+            if (Contains(other.end))
+            {
+                result.Add(new ClassTime(day, other.end, end));
+            }
+
+            return result;
+        }
+
+        public bool Contains(ClassHourTime hour)
+        {
+            return start < hour && hour < end;
         }
 
         public static bool operator ==(ClassTime x, ClassTime y)

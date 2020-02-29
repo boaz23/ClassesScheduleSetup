@@ -90,7 +90,23 @@ namespace ClassesScheduleSetup
 
         public void RemoveAll(IEnumerable<ClassTime> classTimes)
         {
-            throw new NotImplementedException();
+            foreach (ClassTime classTime in classTimes)
+            {
+                Remove(classTime);
+            }
+        }
+
+        public void Remove(ClassTime classTime)
+        {
+            for (int i = ClassTimes.Count - 1; i >= 0; i--)
+            {
+                IEnumerable<ClassTime> subtractResult = ClassTimes[i].Subtract(classTime);
+                ClassTimes.RemoveAt(i);
+                foreach (ClassTime subtractedTime in subtractResult)
+                {
+                    ClassTimes.Add(subtractedTime);
+                }
+            }
         }
 
         public ClassTimesCollection Clone() => new ClassTimesCollection(this);
