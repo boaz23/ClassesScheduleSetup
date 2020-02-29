@@ -11,7 +11,7 @@
 
         public override bool Add(IClassActivity classActivity)
         {
-            if (!ScheduleTimes.AddAlIfNoneOverlap(classActivity.Times))
+            if (classActivity != null && !ScheduleTimes.AddAlIfNoneOverlap(classActivity.Times))
             {
                 return false;
             }
@@ -22,7 +22,10 @@
         public override IClassActivity RemoveLast()
         {
             IClassActivity classActivity = base.RemoveLast();
-            ScheduleTimes.RemoveAll(classActivity.Times);
+            if (classActivity != null)
+            {
+                ScheduleTimes.RemoveAll(classActivity.Times);
+            }
             return classActivity;
         }
     }

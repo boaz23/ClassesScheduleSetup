@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
@@ -12,7 +13,7 @@ namespace ClassesScheduleSetup
         {
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("he-IL");
 
-            IEnumerable<ClassSchedule> schedules = BuildSchedule(Semesters.SemesterC, false);
+            IEnumerable<ClassSchedule> schedules = BuildSchedule(Semesters.SemesterC, PracticeClassSource.GroupOnly, OverlappingPolicy.DisallowOverlapping);
 
             var placements = schedules
                 .Select(x => x.CoursesPlacements.Values)
@@ -60,20 +61,52 @@ namespace ClassesScheduleSetup
                 .ToList();
         }
 
-        private static IEnumerable<ClassSchedule> BuildSchedule(Semester semester, bool takePracticeClassFromAllGroups)
+        private static IEnumerable<ClassSchedule> BuildSchedule(Semester semester, PracticeClassSource practiceClassSource, OverlappingPolicy overlappingPolicy)
         {
-            IClassActivityCollection classActivitiesCollection = new ClassActivityCollection();
-            ClassScheduleSetupAlgorithm algorithm;
-            if (takePracticeClassFromAllGroups)
-            {
-                algorithm = new PracticeClassFromAllGroupsSetupAlgorithm(classActivitiesCollection);
-            }
-            else
-            {
-                algorithm = new PracticeClassFromGroupOnlySetupAlgorithm(classActivitiesCollection);
-            }
-
+            IClassActivityCollection classActivitiesCollection = CreateClassActivityCollectionForPolicy(overlappingPolicy);
+            ClassScheduleSetupAlgorithm algorithm = CreateAlgorithm(classActivitiesCollection, practiceClassSource);
             return algorithm.CalculateSetup(semester);
+        }
+
+        private static IClassActivityCollection CreateClassActivityCollectionForPolicy(OverlappingPolicy overlappingPolicy)
+        {
+            switch (overlappingPolicy)
+            {
+                case OverlappingPolicy.AllowOverlapping:
+                    return new ClassActivityCollection();
+                case OverlappingPolicy.DisallowOverlapping:
+                    return new NoOverlapsClassActivityCollection();
+                case OverlappingPolicy.SaveTimeForLaunch:
+                    throw new System.NotImplementedException();
+                default:
+                    throw new InvalidEnumArgumentException(nameof(overlappingPolicy), (int)overlappingPolicy, typeof(OverlappingPolicy));
+            }
+        }
+
+        private static ClassScheduleSetupAlgorithm CreateAlgorithm(IClassActivityCollection classActivitiesCollection, PracticeClassSource practiceClassSource)
+        {
+            switch (practiceClassSource)
+            {
+                case PracticeClassSource.GroupOnly:
+                    return new PracticeClassFromGroupOnlySetupAlgorithm(classActivitiesCollection);
+                case PracticeClassSource.AllGroups:
+                    return new PracticeClassFromAllGroupsSetupAlgorithm(classActivitiesCollection);
+                default:
+                    throw new InvalidEnumArgumentException(nameof(practiceClassSource), (int)practiceClassSource, typeof(PracticeClassSource));
+            }
+        }
+
+        private enum PracticeClassSource
+        {
+            GroupOnly,
+            AllGroups,
+        }
+
+        private enum OverlappingPolicy
+        {
+            AllowOverlapping = 1,
+            DisallowOverlapping = 2,
+            SaveTimeForLaunch = 4,
         }
     }
 }
