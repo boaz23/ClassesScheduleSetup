@@ -1,9 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
-using ClassesScheduleSetup.ClassActivity;
-
-using Utility.Collections.Generic;
 using Utility.Linq;
 
 namespace ClassesScheduleSetup
@@ -14,16 +10,12 @@ namespace ClassesScheduleSetup
     {
         public ClassScheduleSetupAlgorithm()
         {
-            Weight = 0;
             ClassSchedules = new List<ClassSchedule>();
-            CurrentPlacements = new List<CourseSchedulePlacement>();
-            CurrentCourseActivities = new List<IClassActivity>();
+            CurrentScheduleBuilder = new ClassScheduleBuilder();
         }
 
-        private int Weight { get; set; }
         private List<ClassSchedule> ClassSchedules { get; }
-        private List<CourseSchedulePlacement> CurrentPlacements { get; }
-        private List<IClassActivity> CurrentCourseActivities { get; }
+        private ClassScheduleBuilder CurrentScheduleBuilder { get; }
 
         public virtual IEnumerable<ClassSchedule> CalculateSetup(Semester semester)
         {
@@ -42,7 +34,7 @@ namespace ClassesScheduleSetup
             courses = courses.MoveNext();
             if (courses.HasEnded)
             {
-                ClassSchedules.Add(BuildSchedule());
+                ClassSchedules.Add(CurrentScheduleBuilder.BuildSchedule());
                 return;
             }
 
@@ -65,9 +57,9 @@ namespace ClassesScheduleSetup
             if (classActivitiesOfKindEnumerator.HasEnded)
             {
                 // next course
-                CurrentPlacements.Add(BuildCoursePlacement(courses.Current, group));
+                CurrentScheduleBuilder.BuildCoursePlacement(courses.Current, group);
                 CalculateSetup(courses);
-                CurrentPlacements.RemoveLast();
+                CurrentScheduleBuilder.RemoveLastCoursePlacement();
                 return;
             }
 
@@ -98,37 +90,11 @@ namespace ClassesScheduleSetup
             IClassActivity classActivity
         )
         {
-            CurrentCourseActivities.Add(classActivity);
-            Weight += classActivity.Weight();
+            CurrentScheduleBuilder.AddClassActivity(classActivity);
             CalculateSetup(courses, group, classActivitiesOfKindEnumerator);
-            Weight -= classActivity.Weight();
-            CurrentCourseActivities.RemoveLast();
+            CurrentScheduleBuilder.RemoveLastClassActivity();
         }
 
         protected abstract IEnumerable<ClassActivities> ClassActivitiesForGroup(Course course, CourseGroup group);
-
-        private ClassSchedule BuildSchedule()
-        {
-            return new ClassSchedule(BuildScheduleMap(), Weight);
-        }
-
-        private IDictionary<Course, CourseSchedulePlacement> BuildScheduleMap()
-        {
-            return CurrentPlacements.ToDictionary(x => x.Course);
-        }
-
-        private CourseSchedulePlacement BuildCoursePlacement(Course course, CourseGroup group)
-        {
-            IClassActivity lab = CurrentCourseActivities[^1];
-            IClassActivity practiceClass = CurrentCourseActivities[^2];
-            IClassActivity lecture = CurrentCourseActivities[^3];
-            return new CourseSchedulePlacement
-            {
-                Course = course,
-                Lecture = lecture,
-                PracticeClass = practiceClass,
-                Lab = lab,
-            };
-        }
     }
 }
