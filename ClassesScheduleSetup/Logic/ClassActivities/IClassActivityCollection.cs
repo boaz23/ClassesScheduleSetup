@@ -5,7 +5,7 @@
         int TotalWeight { get; }
 
         bool Add(IClassActivity classActivity);
-        void RemoveLast();
+        IClassActivity RemoveLast();
         CourseSchedulePlacement BuildCoursePlacement(Course course, CourseGroup group);
     }
 }

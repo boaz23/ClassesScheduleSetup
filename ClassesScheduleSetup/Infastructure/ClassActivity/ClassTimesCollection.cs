@@ -87,6 +87,12 @@ namespace ClassesScheduleSetup
                 Add(classTime);
             }
         }
+
+        public void RemoveAll(IEnumerable<ClassTime> classTimes)
+        {
+            throw new NotImplementedException();
+        }
+
         public ClassTimesCollection Clone() => new ClassTimesCollection(this);
 
         object ICloneable.Clone() => Clone();

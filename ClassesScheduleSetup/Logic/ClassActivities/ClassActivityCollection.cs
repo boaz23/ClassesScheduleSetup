@@ -14,7 +14,7 @@ namespace ClassesScheduleSetup
             CurrentCourseActivities = new List<IClassActivity>();
         }
 
-        public int TotalWeight { get; protected set; }
+        public virtual int TotalWeight { get; protected set; }
         protected List<IClassActivity> CurrentCourseActivities { get; }
 
         public virtual bool Add(IClassActivity classActivity)
@@ -24,10 +24,11 @@ namespace ClassesScheduleSetup
             return true;
         }
 
-        public virtual void RemoveLast()
+        public virtual IClassActivity RemoveLast()
         {
             IClassActivity classActivity = CurrentCourseActivities.RemoveLast();
             TotalWeight -= classActivity.Weight();
+            return classActivity;
         }
 
         public virtual CourseSchedulePlacement BuildCoursePlacement(Course course, CourseGroup group)
