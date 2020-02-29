@@ -6,9 +6,9 @@ using Utility.Collections.Generic;
 
 namespace ClassesScheduleSetup
 {
-    public class ClassActivitiesCollection : IClassActivityCollection
+    public class ClassActivityCollection : IClassActivityCollection
     {
-        public ClassActivitiesCollection()
+        public ClassActivityCollection()
         {
             TotalWeight = 0;
             CurrentCourseActivities = new List<IClassActivity>();
