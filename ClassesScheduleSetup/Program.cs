@@ -15,12 +15,18 @@ namespace ClassesScheduleSetup
         {
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("he-IL");
 
-            IEnumerable<ClassSchedule> allPermutations = BuildSchedule(Semesters.SemesterC, PracticeClassSource.GroupOnly, OverlappingPolicy.AllowOverlapping, PermutationInfo.NoInfo);
             IEnumerable<ClassSchedule> schedules = BuildSchedule(Semesters.SemesterC, PracticeClassSource.GroupOnly, OverlappingPolicy.None, PermutationInfo.ReturnPermutationIndex);
+            IEnumerable<ClassSchedule> allPermutations = BuildSchedule(Semesters.SemesterC, PracticeClassSource.GroupOnly, OverlappingPolicy.AllowOverlapping, PermutationInfo.NoInfo);
 
+            ScheduleInfo(schedules);
+            ScheduleInfo(allPermutations);
+        }
+
+        private static void ScheduleInfo(IEnumerable<ClassSchedule> schedules)
+        {
             var placements = schedules
-                .Select(x => x.CoursesPlacements.Values)
-                .ToList();
+                            .Select(x => x.CoursesPlacements.Values)
+                            .ToList();
 
             var timesPerCourse = placements
                 .Select(x => x.Select(y =>
