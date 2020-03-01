@@ -11,6 +11,14 @@ namespace ClassesScheduleSetup
             this.time = time;
         }
 
+        public decimal TotalHours
+        {
+            get
+            {
+                return time / 10m;
+            }
+        }
+
         public ClassTimeSpan Duration()
         {
             return new ClassTimeSpan(Math.Abs(time));

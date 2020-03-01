@@ -24,6 +24,21 @@ namespace ClassesScheduleSetup
 
         private List<ClassTime> ClassTimes { get; }
 
+        public IEnumerable<ClassTime> IntersectWith(ClassTime classTime)
+        {
+            var intersections = new List<ClassTime>();
+            foreach (ClassTime time in ClassTimes)
+            {
+                ClassTime? intersection = time.IntersectWith(classTime);
+                if (intersection.HasValue)
+                {
+                    intersections.Add(intersection.Value);
+                }
+            }
+
+            return intersections;
+        }
+
         public bool AddAlIfNoneOverlap(IEnumerable<ClassTime> classTimes)
         {
             if (classTimes is null)
@@ -79,6 +94,7 @@ namespace ClassesScheduleSetup
             }
 
             ClassTimes.Add(classTime);
+            Sort();
         }
 
         public void AddAll(IEnumerable<ClassTime> classTimes)
@@ -108,9 +124,30 @@ namespace ClassesScheduleSetup
                     ClassTimes.Add(subtractedTime);
                 }
             }
+
+            Sort();
         }
 
         public ClassTimesCollection Clone() => new ClassTimesCollection(this);
+
+        private void Sort()
+        {
+            ClassTimes.Sort((x, y) =>
+            {
+                if (x.Day < y.Day)
+                {
+                    return -1;
+                }
+                else if (x.Day == y.Day)
+                {
+                    return x.Start.CompareTo(y.Start);
+                }
+                else // x.Day < y.Day
+                {
+                    return 1;
+                }
+            });
+        }
 
         object ICloneable.Clone() => Clone();
         public IEnumerator<ClassTime> GetEnumerator() => ((IEnumerable<ClassTime>)ClassTimes).GetEnumerator();

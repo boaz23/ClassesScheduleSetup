@@ -29,6 +29,16 @@ namespace ClassesScheduleSetup
         public ClassHourTime Start => start;
         public ClassHourTime End => end;
 
+        public ClassTime? IntersectWith(ClassTime other)
+        {
+            if (!Overlaps(other))
+            {
+                return null;
+            }
+
+            return new ClassTime(day, ClassHourTime.Max(start, other.start), ClassHourTime.Min(end, other.end));
+        }
+
         public bool Overlaps(ClassTime other)
         {
             return day == other.day &&

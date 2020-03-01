@@ -15,7 +15,7 @@ namespace ClassesScheduleSetup
         {
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("he-IL");
 
-            IEnumerable<ClassSchedule> schedules = BuildSchedule(Semesters.SemesterC, PracticeClassSource.GroupOnly, OverlappingPolicy.None, PermutationInfo.ReturnPermutationIndex);
+            IEnumerable<ClassSchedule> schedules = BuildSchedule(Semesters.SemesterC, PracticeClassSource.GroupOnly, OverlappingPolicy.SaveTimeForLaunch, PermutationInfo.ReturnPermutationIndex);
             IEnumerable<ClassSchedule> allPermutations = BuildSchedule(Semesters.SemesterC, PracticeClassSource.GroupOnly, OverlappingPolicy.AllowOverlapping, PermutationInfo.NoInfo);
 
             ScheduleInfo(schedules);
@@ -94,17 +94,24 @@ namespace ClassesScheduleSetup
             IClassActivityCollection classActivityCollection;
             if (overlappingPolicy.HasAllOfFlags(OverlappingPolicy.AllowOverlapping))
             {
+                if (overlappingPolicy.HasAllOfFlags(OverlappingPolicy.SaveTimeForLaunch))
+                {
+                    throw new NotImplementedException();
+                }
+
                 classActivityCollection = new ClassActivityCollection();
             }
             else
             {
                 // Disallow overlapping
-                classActivityCollection = new NoOverlapsClassActivityCollection();
-            }
-
-            if (overlappingPolicy.HasAllOfFlags(OverlappingPolicy.SaveTimeForLaunch))
-            {
-                throw new NotImplementedException();
+                if (overlappingPolicy.HasAllOfFlags(OverlappingPolicy.SaveTimeForLaunch))
+                {
+                    classActivityCollection = new NoOverlapsAndLaunchTimeClassActivityCollection();
+                }
+                else
+                {
+                    classActivityCollection = new NoOverlapsClassActivityCollection();
+                }
             }
 
             return classActivityCollection;
