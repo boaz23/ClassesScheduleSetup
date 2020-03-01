@@ -16,7 +16,7 @@ namespace ClassesScheduleSetup
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("he-IL");
 
             IEnumerable<ClassSchedule> allPermutations = BuildSchedule(Semesters.SemesterC, PracticeClassSource.GroupOnly, OverlappingPolicy.AllowOverlapping, PermutationInfo.NoInfo);
-            IEnumerable<ClassSchedule> schedules = BuildSchedule(Semesters.SemesterC, PracticeClassSource.GroupOnly, OverlappingPolicy.DisallowOverlapping, PermutationInfo.ReturnPermutationIndex);
+            IEnumerable<ClassSchedule> schedules = BuildSchedule(Semesters.SemesterC, PracticeClassSource.GroupOnly, OverlappingPolicy.None, PermutationInfo.ReturnPermutationIndex);
 
             var placements = schedules
                 .Select(x => x.CoursesPlacements.Values)
@@ -80,7 +80,7 @@ namespace ClassesScheduleSetup
 
         private static IClassActivityCollection CreateClassActivityCollectionForPolicy(OverlappingPolicy overlappingPolicy)
         {
-            if ((int)overlappingPolicy < 1 || (int)overlappingPolicy > 3)
+            if ((int)overlappingPolicy < 0 || (int)overlappingPolicy > 3)
             {
                 throw new InvalidEnumArgumentException(nameof(overlappingPolicy), (int)overlappingPolicy, typeof(OverlappingPolicy));
             }
@@ -125,8 +125,10 @@ namespace ClassesScheduleSetup
 
         private enum OverlappingPolicy
         {
+            None = 0,
             AllowOverlapping = 1,
             SaveTimeForLaunch = 2,
+            All = -1,
         }
 
         private enum PermutationInfo
