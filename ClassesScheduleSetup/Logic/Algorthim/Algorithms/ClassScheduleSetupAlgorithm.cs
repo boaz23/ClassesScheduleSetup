@@ -15,10 +15,14 @@ namespace ClassesScheduleSetup
         {
             ClassSchedules = new List<ClassSchedule>();
             CurrentScheduleBuilder = new ClassScheduleBuilder(classActivitiesCollection);
+
+            PermutationIndex = 0;
         }
 
         private List<ClassSchedule> ClassSchedules { get; }
         private ClassScheduleBuilder CurrentScheduleBuilder { get; }
+
+        private int PermutationIndex { get; set; }
 
         protected abstract IEnumerable<ClassActivitiesInfo> ClassActivitiesForGroup(Course course, CourseGroup group);
 
@@ -39,16 +43,27 @@ namespace ClassesScheduleSetup
             courses = courses.MoveNext();
             if (courses.HasEnded)
             {
-                return BuildSchedule();
+                return OnPlacementPermutation();
             }
 
             return CalculateSetup_CourseGroups(courses);
         }
 
-        private bool BuildSchedule()
+        private bool OnPlacementPermutation()
         {
-            ClassSchedules.Add(CurrentScheduleBuilder.BuildSchedule());
-            return true;
+            bool success = CurrentScheduleBuilder.IsValid;
+            if (success)
+            {
+                BuildSchedule();
+            }
+
+            PermutationIndex++;
+            return success;
+        }
+
+        private void BuildSchedule()
+        {
+            ClassSchedules.Add(CurrentScheduleBuilder.BuildSchedule(PermutationIndex));
         }
 
         private bool CalculateSetup_CourseGroups(ImmutableListEnumerator<Course> courses)
@@ -81,13 +96,10 @@ namespace ClassesScheduleSetup
             IClassActivity classActivity
         )
         {
-            if (!CurrentScheduleBuilder.AddClassActivity(classActivity))
-            {
-                return false;
-            }
-            CalculateSetup_NextKindOfClassActivities(courses, group, classActivitiesOfKindEnumerator);
+            bool added = CurrentScheduleBuilder.AddClassActivity(classActivity);
+            bool success = CalculateSetup_NextKindOfClassActivities(courses, group, classActivitiesOfKindEnumerator);
             CurrentScheduleBuilder.RemoveLastClassActivity();
-            return true;
+            return added && success;
         }
 
         private bool CalculateSetup_NextKindOfClassActivities
@@ -108,10 +120,8 @@ namespace ClassesScheduleSetup
             {
                 return CalculateSetup_EmptyKindOfClassActivities(courses, group, classActivitiesOfKindEnumerator, classActivitiesOfKind);
             }
-            else
-            {
-                return CalculateSetup_ClassActivitiesOfKind(courses, group, classActivitiesOfKindEnumerator, classActivitiesOfKind);
-            }
+
+            return CalculateSetup_ClassActivitiesOfKind(courses, group, classActivitiesOfKindEnumerator, classActivitiesOfKind);
         }
 
         private bool CalculateSetup_BuildCoursePlacement(ImmutableListEnumerator<Course> courses, CourseGroup group)

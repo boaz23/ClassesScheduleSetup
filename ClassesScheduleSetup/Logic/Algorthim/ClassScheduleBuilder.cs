@@ -17,35 +17,76 @@ namespace ClassesScheduleSetup
 
             CurrentPlacements = new List<CourseSchedulePlacement>();
             CurrentCourseActivities = classActivitiesCollection;
+            InvalidScope = 0;
         }
 
         private IClassActivityCollection CurrentCourseActivities { get; }
         private List<CourseSchedulePlacement> CurrentPlacements { get; }
+        private int InvalidScope { get; set; }
+
+        public bool IsValid => InvalidScope == 0;
 
         public bool AddClassActivity(IClassActivity classActivity)
         {
-            return CurrentCourseActivities.Add(classActivity);
+            bool success;
+            if (IsValid)
+            {
+                success = CurrentCourseActivities.Add(classActivity);
+            }
+            else
+            {
+                success = false;
+            }
+
+            if (!success)
+            {
+                InvalidScope++;
+            }
+
+            return success;
         }
 
         public void RemoveLastClassActivity()
         {
-            CurrentCourseActivities.RemoveLast();
+            if (IsValid)
+            {
+                CurrentCourseActivities.RemoveLast();
+            }
+            else
+            {
+                InvalidScope--;
+            }
         }
 
         public void BuildCoursePlacement(Course course, CourseGroup group)
         {
+            if (!IsValid)
+            {
+                return;
+            }
+
             CourseSchedulePlacement placement = CurrentCourseActivities.BuildCoursePlacement(course, group);
             CurrentPlacements.Add(placement);
         }
 
         public void RemoveLastCoursePlacement()
         {
+            if (!IsValid)
+            {
+                return;
+            }
+
             CurrentPlacements.RemoveLast();
         }
 
-        public ClassSchedule BuildSchedule()
+        public ClassSchedule BuildSchedule(int permutationIndex)
         {
-            return new ClassSchedule(BuildScheduleMap(), CurrentCourseActivities.TotalWeight);
+            if (!IsValid)
+            {
+                throw new InvalidOperationException("Cannot build schedule when in an invalid state.");
+            }
+
+            return new ClassSchedule(BuildScheduleMap(), CurrentCourseActivities.TotalWeight, permutationIndex);
         }
 
         private IDictionary<Course, CourseSchedulePlacement> BuildScheduleMap()

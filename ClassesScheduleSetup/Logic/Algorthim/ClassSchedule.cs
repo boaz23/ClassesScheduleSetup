@@ -7,7 +7,7 @@ namespace ClassesScheduleSetup
 {
     public class ClassSchedule
     {
-        public ClassSchedule(IDictionary<Course, CourseSchedulePlacement> placements, int weight)
+        public ClassSchedule(IDictionary<Course, CourseSchedulePlacement> placements, int weight, int permutationIndex)
         {
             if (EnumerableExtensions.IsNullOrEmpty(placements))
             {
@@ -16,9 +16,11 @@ namespace ClassesScheduleSetup
 
             CoursesPlacements = placements;
             Weight = weight;
+            PermutationIndex = permutationIndex;
         }
 
         public IDictionary<Course, CourseSchedulePlacement> CoursesPlacements { get; }
         public int Weight { get; }
+        public int PermutationIndex { get; }
     }
 }
