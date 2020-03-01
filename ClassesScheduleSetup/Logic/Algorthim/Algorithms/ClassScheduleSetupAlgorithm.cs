@@ -4,9 +4,9 @@ using Utility.Linq;
 
 namespace ClassesScheduleSetup
 {
-    // TODO: Permutation indecies (decorator pattern)
-    // TODO: Add filters for the class activities (e.g. no overlaps and at least 1 hour for launch time)
-    // TODO: Decorator for class activities from group
+    // TODO: (Decorator pattern) Permutation indecies
+    // TODO: (Decorator pattern) Filters for the class activities (e.g. no overlaps and at least 1 hour for launch time)
+    // TODO: (Decorator pattern) Class activities from group (practice classes from group only or from all groups)
     // TODO: Resource cleanup (e.g. enumerators)
     public abstract class ClassScheduleSetupAlgorithm
     {
