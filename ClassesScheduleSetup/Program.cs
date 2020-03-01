@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
+using Utility;
 using Utility.Linq;
 
 namespace ClassesScheduleSetup
@@ -76,20 +78,30 @@ namespace ClassesScheduleSetup
             return algorithm.CalculateSetup(semester);
         }
 
-        // TODO: fix to use the flags
         private static IClassActivityCollection CreateClassActivityCollectionForPolicy(OverlappingPolicy overlappingPolicy)
         {
-            switch (overlappingPolicy)
+            if ((int)overlappingPolicy < 1 || (int)overlappingPolicy > 3)
             {
-                case OverlappingPolicy.AllowOverlapping:
-                    return new ClassActivityCollection();
-                case OverlappingPolicy.DisallowOverlapping:
-                    return new NoOverlapsClassActivityCollection();
-                case OverlappingPolicy.SaveTimeForLaunch:
-                    throw new System.NotImplementedException();
-                default:
-                    throw new InvalidEnumArgumentException(nameof(overlappingPolicy), (int)overlappingPolicy, typeof(OverlappingPolicy));
+                throw new InvalidEnumArgumentException(nameof(overlappingPolicy), (int)overlappingPolicy, typeof(OverlappingPolicy));
             }
+
+            IClassActivityCollection classActivityCollection;
+            if (overlappingPolicy.HasAllOfFlags(OverlappingPolicy.AllowOverlapping))
+            {
+                classActivityCollection = new ClassActivityCollection();
+            }
+            else
+            {
+                // Disallow overlapping
+                classActivityCollection = new NoOverlapsClassActivityCollection();
+            }
+
+            if (overlappingPolicy.HasAllOfFlags(OverlappingPolicy.SaveTimeForLaunch))
+            {
+                throw new NotImplementedException();
+            }
+
+            return classActivityCollection;
         }
 
         private static ClassScheduleSetupAlgorithm CreateAlgorithm(IClassActivityCollection classActivitiesCollection, PracticeClassSource practiceClassSource)
@@ -114,8 +126,7 @@ namespace ClassesScheduleSetup
         private enum OverlappingPolicy
         {
             AllowOverlapping = 1,
-            DisallowOverlapping = 2,
-            SaveTimeForLaunch = 4,
+            SaveTimeForLaunch = 2,
         }
 
         private enum PermutationInfo

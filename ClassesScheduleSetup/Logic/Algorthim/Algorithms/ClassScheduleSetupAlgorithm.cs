@@ -10,6 +10,7 @@ namespace ClassesScheduleSetup
     // TODO: Resource cleanup (e.g. enumerators)
     public abstract class ClassScheduleSetupAlgorithm
     {
+        // IDEA: reference to the algorithm instance with the data to operate on (and chain it in the constructor)
         public ClassScheduleSetupAlgorithm(IClassActivityCollection classActivitiesCollection)
         {
             ClassSchedules = new List<ClassSchedule>();
@@ -116,9 +117,9 @@ namespace ClassesScheduleSetup
         private bool CalculateSetup_BuildCoursePlacement(ImmutableListEnumerator<Course> courses, CourseGroup group)
         {
             CurrentScheduleBuilder.BuildCoursePlacement(courses.Current, group);
-            CalculateSetup_NextCourse(courses);
+            bool success = CalculateSetup_NextCourse(courses);
             CurrentScheduleBuilder.RemoveLastCoursePlacement();
-            return true;
+            return success;
         }
 
         private bool CalculateSetup_EmptyKindOfClassActivities
