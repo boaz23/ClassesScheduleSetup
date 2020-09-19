@@ -4,19 +4,20 @@
     {
         Normal = 0,
 
+        StartsIn9AM = Normal,
         EndsIn5PM = 2,
-        EndsIn6PM = 8,
-        EndsIn7PM = 160,
-        EndsIn8PM = 800,
+        EndsIn6PM = 12,
+        StartsIn8AM = 65,
+        EndsIn7PM = 350,
+        EndsIn8PM = 1800,
 
-        Thursday_EndsIn1PM = 10,
-        Thursday_EndsIn2PM = 20,
-        Thursday_EndsIn3PM = 40,
-        Thursday_EndsIn4PM = 80,
-        Thursday_EndsIn5PM = 4000,
-        Thursday_EndsIn6PM = 20000,
-
-        Sebastian_Ben_Daniel = -30000,
-        Shahaf_Finder = -25000,
+        Thursday_EndsIn1PM = Normal,
+        Thursday_EndsIn2PM = Normal,
+        Thursday_EndsIn3PM = Normal,
+        Thursday_EndsIn4PM = Normal,
+        Thursday_EndsIn5PM = EndsIn5PM,
+        Thursday_EndsIn6PM = EndsIn6PM,
+        Thursday_EndsIn7PM = EndsIn7PM,
+        Thursday_EndsIn8PM = EndsIn8PM,
     }
 }

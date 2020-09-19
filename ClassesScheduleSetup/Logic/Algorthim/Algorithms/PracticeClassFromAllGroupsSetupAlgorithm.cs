@@ -40,10 +40,10 @@ namespace ClassesScheduleSetup
 
         private void BuildPraticeClassesForCourse(Course course)
         {
-            PraticeClasses[course] = new ClassActivitiesInfo(GetAllPracticeClassesOfCourse(course), false);
+            PraticeClasses[course] = new ClassActivitiesInfo(GetAllPracticeClassesOfCourse(course), true);
         }
 
-        private IEnumerable<IClassActivity> GetAllPracticeClassesOfCourse(Course course)
+        private static IEnumerable<IClassActivity> GetAllPracticeClassesOfCourse(Course course)
         {
             return course.Groups.SelectMany(group => group.PracticalClasses);
         }

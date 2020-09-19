@@ -13,10 +13,10 @@ namespace ClassesScheduleSetup
 
         static Semesters()
         {
-            SemesterC = WeighClasses(SemesterC_Builder()).Build();
+            Semester5 = WeighClasses(Semester5_Builder()).Build();
         }
 
-        public static Semester SemesterC { get; }
+        public static Semester Semester5 { get; }
 
         private static Semester.Builder WeighClasses(Semester.Builder semester)
         {
@@ -101,6 +101,12 @@ namespace ClassesScheduleSetup
                     break;
                 case 18:
                     classActivity.Weight += (int)ClassActivityWeight.Thursday_EndsIn6PM;
+                    break;
+                case 19:
+                    classActivity.Weight += (int)ClassActivityWeight.Thursday_EndsIn7PM;
+                    break;
+                case 20:
+                    classActivity.Weight += (int)ClassActivityWeight.Thursday_EndsIn8PM;
                     break;
                 default:
                     break;

@@ -15,8 +15,8 @@ namespace ClassesScheduleSetup
         {
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("he-IL");
 
-            IEnumerable<ClassSchedule> schedules = BuildSchedule(Semesters.SemesterC, PracticeClassSource.GroupOnly, OverlappingPolicy.SaveTimeForLaunch, PermutationInfo.ReturnPermutationIndex);
-            IEnumerable<ClassSchedule> allPermutations = BuildSchedule(Semesters.SemesterC, PracticeClassSource.GroupOnly, OverlappingPolicy.AllowOverlapping, PermutationInfo.NoInfo);
+            IEnumerable<ClassSchedule> schedules = BuildSchedule(Semesters.Semester5, PracticeClassSource.GroupOnly, OverlappingPolicy.Normal, PermutationInfo.ReturnPermutationIndex);
+            IEnumerable<ClassSchedule> allPermutations = BuildSchedule(Semesters.Semester5, PracticeClassSource.GroupOnly, OverlappingPolicy.AllowOverlapping, PermutationInfo.ReturnPermutationIndex);
 
             ScheduleInfo(schedules);
             ScheduleInfo(allPermutations);
@@ -31,26 +31,23 @@ namespace ClassesScheduleSetup
             var timesPerCourse = placements
                 .Select(x => x.Select(y =>
                 {
-                    IEnumerable<ClassTime> classTimes = Enumerable.Empty<ClassTime>();
+                    var classTimes = new List<ClassTime>();
                     IEnumerable<IClassActivity> classActivities = EnumerableExtensions.AsEnumerable(y.Lecture, y.PracticeClass, y.Lab);
                     foreach (IClassActivity classActivity in classActivities)
                     {
                         if (classActivity != null)
                         {
-                            classTimes = classTimes.Concat(classActivity.Times);
+                            classTimes.AddRange(classActivity.Times);
                         }
                     }
 
-                    return classTimes;
+                    return (Course: y.Course, Times: classTimes);
                 }))
-                .Select(x => x
-                    .Select(y => y.ToList())
-                    .ToList()
-                )
+                .Select(x => x.ToDictionary(y => y.Course, y => y.Times))
                 .ToList();
 
             var times = timesPerCourse
-                .Select(x => x.SelectMany(y => y))
+                .Select(x => x.Values.SelectMany(y => y))
                 .Select(x => x
                     .OrderBy(y => y.Day)
                     .ThenBy(y => y.Start)
@@ -62,12 +59,53 @@ namespace ClassesScheduleSetup
                 .Zip(placements)
                 .Zip(timesPerCourse, (tuple, second) => (tuple.First, tuple.Second, second))
                 .Zip(times, (tuple, second) => (tuple.First, tuple.Second, tuple.second, second))
-                .Select(x => (Schedule: x.First, Placements: x.Second, TimesPerCourse: x.Item3, Times: x.Item4))
+                .Select(x => new {
+                    Schedule = x.First,
+                    Placements = x.Second,
+                    TimesPerCourse = x.Item3,
+                    Times = x.Item4,
+                    Weight = x.First.Weight,
+                    PermutationIndex = x.First.PermutationIndex,
+                })
                 .ToList();
 
-            var orderedSchedules = schedules
+            var orderedSchedulesInfos = zipped
                 .OrderBy(x => x.Weight)
                 .ToList();
+
+            //var free = orderedSchedulesInfos
+            //    .Select(schedule =>
+            //    {
+            //        int freeDaysCount = 0;
+            //        for (DayOfWeek day = DayOfWeek.Sunday; day <= DayOfWeek.Thursday; day++)
+            //        {
+            //            bool found = false;
+            //            foreach (ClassTime time in schedule.Times)
+            //            {
+            //                if (time.Day == day)
+            //                {
+            //                    found = true;
+            //                    break;
+            //                }
+            //            }
+
+            //            if (!found)
+            //            {
+            //                freeDaysCount++;
+            //            }
+            //        }
+
+            //        return new
+            //        {
+            //            Schedule = schedule,
+            //            FreeDaysCount = freeDaysCount,
+            //            Weight = schedule.Weight,
+            //            PermutationIndex = schedule.PermutationIndex,
+            //        };
+            //    })
+            //    .OrderByDescending(x => x.FreeDaysCount)
+            //    .ThenBy(x => x.Weight)
+            //    .ToList();
         }
 
         // TODO: fix to work with all parameters
@@ -138,7 +176,7 @@ namespace ClassesScheduleSetup
 
         private enum OverlappingPolicy
         {
-            None = 0,
+            Normal = 0,
             AllowOverlapping = 1,
             SaveTimeForLaunch = 2,
             All = -1,

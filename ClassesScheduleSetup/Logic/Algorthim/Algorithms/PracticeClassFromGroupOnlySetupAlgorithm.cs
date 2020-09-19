@@ -14,7 +14,7 @@ namespace ClassesScheduleSetup
         {
             return EnumerableExtensions.AsEnumerable
             (
-                new ClassActivitiesInfo(group.PracticalClasses, false),
+                new ClassActivitiesInfo(group.PracticalClasses, true),
                 new ClassActivitiesInfo(group.Labs, true)
             );
         }
